@@ -1,0 +1,4072 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oromia Bank - Rural Branch Smart Portal</title>
+    <style>
+        :root {
+            --oromia-green: #6BB343;
+            --oromia-blue: #2A3179;
+            --oromia-bg: #FAFAF7;
+            --text-dark: #222222;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--oromia-bg);
+            background-image: linear-gradient(rgba(250, 250, 247, 0.96), rgba(250, 250, 247, 0.96));
+            background-size: cover;
+            background-position: center;
+            color: var(--text-dark);
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: white;
+            padding: 12px 5%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-bottom: 4px solid var(--oromia-green);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+            background: rgba(20, 28, 55, 0.55);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-card {
+            width: min(420px, 100%);
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-card h3 {
+            color: var(--oromia-blue);
+            margin-bottom: 16px;
+        }
+
+        .modal-card .actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .modal-card button {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .ghost-btn {
+            background: #eef1f5;
+            color: var(--oromia-blue);
+        }
+
+        .auth-switch {
+            color: var(--oromia-blue);
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 13px;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--oromia-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .brand-title h1 {
+            color: var(--oromia-green);
+            font-size: 20px;
+        }
+
+        .brand-title p {
+            color: var(--oromia-blue);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .top-nav a {
+            padding: 9px 12px;
+            color: var(--oromia-blue);
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .top-nav a:hover,
+        .top-nav a:focus-visible {
+            background: #f1f4ee;
+            outline: none;
+        }
+
+        .nav-dropdown {
+            position: relative;
+        }
+
+        .nav-dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            padding: 6px;
+            background: white;
+            border: 1px solid #e3e7e0;
+            border-radius: 8px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+            z-index: 15;
+        }
+
+        .nav-dropdown.open .nav-dropdown-menu,
+        .nav-dropdown:hover .nav-dropdown-menu {
+            display: grid;
+        }
+
+        .nav-dropdown-menu button {
+            padding: 10px 12px;
+            border: 0;
+            border-radius: 6px;
+            background: white;
+            color: var(--oromia-blue);
+            text-align: left;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        .nav-dropdown-menu button:hover,
+        .nav-dropdown-menu button:focus-visible {
+            background: #f1f4ee;
+            outline: none;
+        }
+
+        .lang-switch,
+        .access-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f4ee;
+            border: 1px solid rgba(42, 49, 121, 0.18);
+            border-radius: 999px;
+            padding: 4px;
+        }
+
+        .lang-switch button,
+        .access-switch button {
+            padding: 7px 12px;
+            border: none;
+            background: transparent;
+            color: var(--oromia-blue);
+            cursor: pointer;
+            border-radius: 999px;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 1050px) {
+            header {
+                flex-wrap: wrap;
+                gap: 10px 16px;
+            }
+
+            .top-nav {
+                order: 3;
+                flex: 1 0 100%;
+                justify-content: center;
+                margin-left: 0;
+            }
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 10px 4%;
+            }
+
+            #languageSwitcher {
+                order: 1;
+                margin-left: auto;
+            }
+
+            #accessSwitcher {
+                order: 2;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .top-nav {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                font-size: 17px;
+            }
+
+            .brand-title h1 {
+                font-size: 17px;
+            }
+
+            .brand-title p {
+                font-size: 11px;
+            }
+
+            .top-nav {
+                gap: 2px;
+            }
+
+            .top-nav a {
+                padding: 8px;
+                font-size: 13px;
+            }
+
+            #languageSwitcher,
+            #accessSwitcher {
+                gap: 2px;
+                padding: 3px;
+            }
+
+            .lang-switch button,
+            .access-switch button {
+                padding: 7px 8px;
+                font-size: 11px;
+            }
+        }
+
+        body.home-page-mode {
+            --oromia-blue: #174577;
+            background: #f3f8fc;
+        }
+
+        body.home-page-mode > header {
+            min-height: 76px;
+            padding: 10px 4.2%;
+            gap: 28px;
+            color: white;
+            background: #123b6a;
+            border-bottom: 0;
+            box-shadow: 0 3px 16px rgba(7, 33, 63, 0.18);
+        }
+
+        body.home-page-mode .logo-area {
+            gap: 14px;
+        }
+
+        body.home-page-mode .logo-icon {
+            display: none;
+        }
+
+        .logo-mark {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            padding: 4px;
+            border-radius: 50%;
+            background: white;
+        }
+
+        body.home-page-mode .brand-title h1,
+        body.home-page-mode .brand-title p,
+        body.home-page-mode .top-nav a {
+            color: white;
+        }
+
+        body.home-page-mode .brand-title h1 {
+            font-size: 21px;
+            letter-spacing: 0.01em;
+        }
+
+        body.home-page-mode .brand-title p {
+            color: #d4e5f6;
+            font-weight: 400;
+        }
+
+        body.home-page-mode .top-nav {
+            gap: 14px;
+        }
+
+        body.home-page-mode .top-nav a {
+            padding: 10px 12px;
+            border-radius: 0;
+        }
+
+        body.home-page-mode .top-nav a[aria-current="page"] {
+            box-shadow: inset 0 -2px #b9defe;
+        }
+
+        body.home-page-mode .top-nav a:hover,
+        body.home-page-mode .top-nav a:focus-visible {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        #accessSwitcher {
+            display: none;
+        }
+
+        body.home-page-mode #languageSwitcher {
+            margin-left: 4px;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.24);
+        }
+
+        body.home-page-mode .lang-switch button {
+            color: white;
+        }
+
+        body.home-page-mode .lang-switch button.active {
+            background: white;
+            color: #123b6a;
+        }
+
+        .home-screen {
+            min-height: calc(100vh - 76px);
+            display: grid;
+            grid-template-columns: 216px minmax(0, 1fr);
+            grid-template-rows: minmax(570px, 1fr) 58px;
+            background: white;
+        }
+
+        .public-page-mode > .home-screen.public-page-active {
+            display: grid !important;
+        }
+
+        .home-icon-sprite {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .home-sidebar {
+            grid-column: 1;
+            grid-row: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            padding: 22px 14px;
+            background: #fff;
+            border-right: 1px solid #e7edf3;
+        }
+
+        .home-side-link {
+            min-height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 10px 13px;
+            color: #203e5f;
+            border: 0;
+            border-radius: 9px;
+            background: transparent;
+            text-decoration: none;
+            text-align: left;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+        }
+
+        .home-side-link:hover,
+        .home-side-link:focus-visible {
+            color: #12599a;
+            background: #eff7fe;
+            outline: none;
+            transform: translateX(2px);
+        }
+
+        .home-side-link.active {
+            color: #15548b;
+            background: #e5f2fc;
+        }
+
+        .home-side-icon {
+            width: 21px;
+            height: 21px;
+            flex: 0 0 21px;
+            color: #174b7a;
+        }
+
+        .home-stage {
+            position: relative;
+            isolation: isolate;
+            grid-column: 2;
+            grid-row: 1;
+            min-width: 0;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
+            align-items: center;
+            gap: clamp(20px, 3vw, 52px);
+            overflow: hidden;
+            padding: 62px clamp(28px, 4.5vw, 76px);
+            background:
+                radial-gradient(ellipse at 49% 10%, rgba(255,255,255,.74) 0 8%, transparent 28%),
+                linear-gradient(155deg, #8dc9f4 0%, #c6e7fa 43%, #edf7fb 73%, #dbeaf0 100%);
+        }
+
+        .home-stage::after {
+            position: absolute;
+            z-index: -1;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 20%;
+            content: "";
+            background: linear-gradient(180deg, rgba(122, 169, 117, 0), rgba(75, 131, 66, 0.7));
+        }
+
+        .home-scene {
+            position: absolute;
+            z-index: -1;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .home-copy {
+            position: relative;
+            z-index: 1;
+            max-width: 480px;
+            align-self: center;
+            margin-bottom: 70px;
+            color: #173f69;
+        }
+
+        .home-eyebrow {
+            margin-bottom: 14px;
+            color: #24699f;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
+        .home-copy h2 {
+            max-width: 450px;
+            margin-bottom: 14px;
+            color: #173e68;
+            font-size: clamp(34px, 3.4vw, 48px);
+            line-height: 1.08;
+            letter-spacing: -0.035em;
+        }
+
+        .home-copy > p:not(.home-eyebrow) {
+            max-width: 430px;
+            color: #385775;
+            font-size: 17px;
+            line-height: 1.55;
+        }
+
+        .home-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 28px;
+        }
+
+        .home-feature {
+            width: 76px;
+            display: grid;
+            justify-items: center;
+            gap: 7px;
+            color: #254463;
+            text-align: center;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.25;
+        }
+
+        .home-feature-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            color: #167e75;
+            background: #c8f0e7;
+        }
+
+        .home-feature:nth-child(2) .home-feature-icon {
+            color: #2876b7;
+            background: #d5ebff;
+        }
+
+        .home-feature:nth-child(3) .home-feature-icon {
+            color: #6554bf;
+            background: #e7e1ff;
+        }
+
+        .home-feature:nth-child(4) .home-feature-icon {
+            color: #c26b20;
+            background: #ffead1;
+        }
+
+        .home-feature-icon svg {
+            width: 25px;
+            height: 25px;
+        }
+
+        .home-login-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding: 28px 25px;
+            align-self: center;
+            margin: 0 0 32px;
+            border: 1px solid rgba(255, 255, 255, 0.82);
+            border-radius: 17px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow: 0 22px 55px rgba(26, 62, 91, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .home-card-mark {
+            width: 52px;
+            height: 52px;
+            margin: 0 auto 10px;
+            object-fit: contain;
+        }
+
+        .home-login-card h3 {
+            margin-bottom: 7px;
+            color: #183d65;
+            font-size: 23px;
+        }
+
+        .home-login-card > p {
+            margin-bottom: 21px;
+            color: #647b90;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .home-login-action {
+            width: 100%;
+            min-height: 53px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 10px;
+            padding: 10px 14px;
+            border: 1px solid transparent;
+            border-radius: 11px;
+            color: #24496b;
+            text-align: left;
+            font: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 160ms ease, box-shadow 160ms ease;
+        }
+
+        .home-login-action:hover,
+        .home-login-action:focus-visible {
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(25, 65, 104, 0.12);
+        }
+
+        .home-login-action.customer {
+            background: #e6f3fd;
+        }
+
+        .home-login-action.staff {
+            background: #e1f4ef;
+        }
+
+        .home-login-action.register {
+            background: #efedff;
+        }
+
+        .home-action-icon {
+            width: 25px;
+            height: 25px;
+            display: grid;
+            place-items: center;
+            color: #2373af;
+        }
+
+        .home-login-action.staff .home-action-icon {
+            color: #16866d;
+        }
+
+        .home-login-action.register .home-action-icon {
+            color: #6653bd;
+        }
+
+        .home-action-icon svg {
+            width: 23px;
+            height: 23px;
+        }
+
+        .home-action-arrow {
+            margin-left: auto;
+            color: #597894;
+            font-size: 23px;
+            font-weight: 400;
+        }
+
+        .home-footer {
+            grid-column: 1 / -1;
+            grid-row: 2;
+            min-height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 12px 3.2%;
+            color: #edf5fd;
+            background: #123b6a;
+            font-size: 12px;
+        }
+
+        .home-footer strong {
+            margin-right: 8px;
+        }
+
+        .home-footer-note {
+            color: #d2e1f0;
+            letter-spacing: 0.02em;
+        }
+
+        @media (max-width: 1050px) {
+            body.home-page-mode > header {
+                gap: 16px;
+            }
+
+            body.home-page-mode .top-nav {
+                gap: 4px;
+            }
+
+            .home-screen {
+                grid-template-columns: 190px minmax(0, 1fr);
+            }
+
+            .home-stage {
+                grid-template-columns: minmax(0, 1fr) minmax(270px, 320px);
+                gap: 18px;
+                padding: 42px 28px;
+            }
+
+            .home-copy h2 {
+                font-size: clamp(32px, 4vw, 42px);
+            }
+        }
+
+        @media (max-width: 800px) {
+            body.home-page-mode > header {
+                gap: 8px 14px;
+            }
+
+            body.home-page-mode .top-nav {
+                order: 3;
+                flex: 1 0 100%;
+                justify-content: center;
+                margin: 0;
+            }
+
+            .home-screen {
+                min-height: calc(100vh - 116px);
+                grid-template-columns: 1fr;
+                grid-template-rows: auto minmax(670px, 1fr) auto;
+            }
+
+            .home-sidebar {
+                grid-column: 1;
+                grid-row: 1;
+                flex-direction: row;
+                overflow-x: auto;
+                gap: 4px;
+                padding: 9px 12px;
+                border-right: 0;
+                border-bottom: 1px solid #e7edf3;
+            }
+
+            .home-side-link {
+                min-width: max-content;
+                min-height: 42px;
+                padding: 8px 11px;
+            }
+
+            .home-side-icon {
+                width: 19px;
+                height: 19px;
+                flex-basis: 19px;
+            }
+
+            .home-stage {
+                grid-column: 1;
+                grid-row: 2;
+                min-height: 670px;
+                grid-template-columns: minmax(0, 1fr) minmax(260px, 310px);
+                padding: 38px 28px;
+            }
+
+            .home-footer {
+                grid-row: 3;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body.home-page-mode > header {
+                padding: 9px 4%;
+            }
+
+            body.home-page-mode .top-nav {
+                order: 3;
+                flex-basis: 100%;
+            }
+
+            body.home-page-mode #languageSwitcher {
+                margin-left: auto;
+            }
+
+            .logo-mark {
+                width: 43px;
+                height: 43px;
+            }
+
+            .home-screen {
+                grid-template-rows: auto minmax(900px, auto) auto;
+            }
+
+            .home-sidebar {
+                padding-inline: 8px;
+            }
+
+            .home-side-link {
+                gap: 7px;
+                padding-inline: 9px;
+                font-size: 12px;
+            }
+
+            .home-side-icon {
+                width: 17px;
+                height: 17px;
+                flex-basis: 17px;
+            }
+
+            .home-stage {
+                min-height: 900px;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto auto;
+                align-content: start;
+                gap: 24px;
+                padding: 42px 22px 30px;
+            }
+
+            .home-scene {
+                width: 150%;
+                height: 66%;
+                right: -35%;
+                opacity: 0.85;
+            }
+
+            .home-copy {
+                margin: 0;
+            }
+
+            .home-copy h2 {
+                max-width: 360px;
+                font-size: 38px;
+            }
+
+            .home-copy > p:not(.home-eyebrow) {
+                max-width: 340px;
+                font-size: 15px;
+            }
+
+            .home-features {
+                gap: 5px;
+                margin-top: 19px;
+            }
+
+            .home-feature {
+                width: 68px;
+                font-size: 10px;
+            }
+
+            .home-feature-icon {
+                width: 42px;
+                height: 42px;
+            }
+
+            .home-login-card {
+                max-width: 380px;
+                justify-self: center;
+                margin: 0;
+                padding: 23px 20px;
+            }
+
+            .home-footer {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 6px 18px;
+                padding: 13px 12px;
+                text-align: center;
+            }
+        }
+
+        .lang-switch button.active {
+            background: var(--oromia-blue);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .hero {
+            background-image: linear-gradient(135deg, #2A3179, #1d2253);
+            color: white;
+            padding: 40px 5%;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            color: #D1D5DB;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .service-selector {
+            max-width: 1100px;
+            margin: 24px auto 0;
+            padding: 0 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .service-choice {
+            background: rgba(255, 255, 255, 0.7);
+            color: var(--oromia-blue);
+            border: 1px solid rgba(42, 49, 121, 0.2);
+            border-radius: 999px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .service-choice.active {
+            background: var(--oromia-blue);
+            color: white;
+            box-shadow: 0 8px 18px rgba(42, 49, 121, 0.2);
+        }
+
+        .customer-logout-btn {
+            min-height: 44px;
+            padding: 10px 16px;
+            border: 1px solid rgba(42, 49, 121, 0.2);
+            border-radius: 999px;
+            background: white;
+            color: var(--oromia-blue);
+            font: inherit;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .customer-logout-btn:hover,
+        .customer-logout-btn:focus-visible {
+            background: #f1f4ee;
+        }
+
+        .customer-logout-btn[hidden] {
+            display: none;
+        }
+
+        .service-panel {
+            display: none;
+            max-width: 1100px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+        }
+
+        .service-panel.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--oromia-green);
+        }
+
+        .card h3 {
+            color: var(--oromia-blue);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: var(--oromia-green);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #E8F5E9;
+            color: #2E7D32;
+        }
+
+        .ticket-result,
+        .loan-result {
+            margin-top: 15px;
+            padding: 15px;
+            background: #F4F6F8;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .admin-open-btn {
+            background: var(--oromia-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .admin-panel {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: block;
+        }
+
+        .admin-panel.hidden {
+            display: none;
+        }
+
+        body.public-page-mode > *:not(header):not(.modal):not(script):not([data-public-page]) {
+            display: none !important;
+        }
+
+        body.public-page-mode > [data-public-page]:not(.public-page-active) {
+            display: none !important;
+        }
+
+        body.public-page-mode > [data-public-page].public-page-active {
+            display: block !important;
+        }
+
+        body.public-page-mode > #home.home-screen.public-page-active {
+            display: grid !important;
+        }
+
+        body.admin-mode > *:not(#adminPanel):not(script) {
+            display: none !important;
+        }
+
+        body.admin-mode #adminPanel {
+            max-width: none;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .admin-shell {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+            border: 1px solid #edf0f2;
+            overflow: hidden;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, var(--oromia-blue), #1E255A);
+            color: white;
+            padding: 24px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .admin-header h2 {
+            font-size: 24px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toolbar button {
+            border: none;
+            padding: 9px 14px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .primary-btn {
+            background: var(--oromia-green);
+            color: white;
+        }
+
+        .secondary-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .admin-body {
+            padding: 24px 30px 30px;
+        }
+
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 230px minmax(0, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        .admin-sidebar {
+            position: sticky;
+            top: 20px;
+            display: grid;
+            gap: 8px;
+            padding: 12px;
+            background: #f8fafc;
+            border: 1px solid #edf0f2;
+            border-radius: 12px;
+        }
+
+        .admin-nav-button {
+            width: 100%;
+            padding: 12px;
+            color: #344054;
+            text-align: left;
+            font-weight: 600;
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .admin-nav-button:hover,
+        .admin-nav-button.active {
+            color: white;
+            background: var(--oromia-blue);
+        }
+
+        .admin-content {
+            min-width: 0;
+        }
+
+        .admin-page[hidden] {
+            display: none !important;
+        }
+
+        .admin-content > .admin-page > .dashboard-tools,
+        .admin-content > .admin-page > .report-section {
+            max-width: none;
+            margin: 0 0 20px;
+        }
+
+        .admin-content > .admin-page > .stat-grid,
+        .admin-content > .admin-page > .analytics-section,
+        .admin-content > .admin-page > .table-section {
+            margin-bottom: 20px;
+        }
+
+        .admin-page-heading {
+            margin: 0 0 20px;
+            color: var(--oromia-blue);
+        }
+
+        @media (max-width: 800px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-sidebar {
+                position: static;
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .admin-nav-button {
+                width: auto;
+                flex: 0 0 auto;
+                white-space: nowrap;
+            }
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .analytics-section {
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 24px;
+            border: 1px solid #edf0f2;
+        }
+
+        .analytics-section h3 {
+            color: var(--oromia-blue);
+            margin-bottom: 18px;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .metric-box {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            border: 1px solid #edf0f2;
+        }
+
+        .metric-box .label {
+            color: #667085;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .metric-box .value {
+            margin-top: 10px;
+            color: var(--oromia-blue);
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .analytics-charts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .chart-panel {
+            background: white;
+            border: 1px solid #edf0f2;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .chart-panel h4 {
+            color: var(--oromia-blue);
+            margin-bottom: 12px;
+        }
+
+        .service-row,
+        .trend-row {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 36px;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+
+        .service-bar-track {
+            width: 100%;
+            height: 10px;
+            background: #edf0f2;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .service-bar {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--oromia-green), #8ad16a);
+        }
+
+        .service-bar.alt {
+            background: linear-gradient(90deg, var(--oromia-blue), #6a78d6);
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            border-left: 5px solid var(--oromia-green);
+        }
+
+        .stat-card .label {
+            color: #667085;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card .value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--oromia-blue);
+            margin-top: 12px;
+        }
+
+        .table-section {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #edf0f2;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            color: var(--oromia-blue);
+            background: #f8fafc;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .waiting {
+            background: #fff4df;
+            color: #b7791f;
+        }
+
+        .served {
+            background: #eafbe7;
+            color: #2e7d32;
+        }
+
+        .review {
+            background: #ebf4ff;
+            color: #1d4ed8;
+        }
+
+        .approve {
+            background: #e6f7eb;
+            color: #237a3d;
+        }
+
+        .small-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 6px;
+            font-size: 12px;
+            color: white;
+            background: var(--oromia-blue);
+        }
+
+        .approval-btn {
+            display: none;
+        }
+
+        .alert-box {
+            background: #fef3f2;
+            border: 1px solid #f7d1ca;
+            color: #b42318;
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 24px;
+        }
+
+        .lookup-card,
+        .dashboard-tools,
+        .report-section {
+            background: white;
+            border: 1px solid #edf0f2;
+            border-radius: 12px;
+            padding: 18px;
+            margin: 24px auto;
+            max-width: 1200px;
+        }
+
+        .live-queue {
+            max-width: 1200px;
+            margin: 24px auto;
+            padding: 18px;
+            background: white;
+            border: 1px solid #edf0f2;
+            border-radius: 12px;
+        }
+
+        .live-queue-header,
+        .live-queue-title,
+        .live-queue-meta {
+            display: flex;
+            align-items: center;
+        }
+
+        .live-queue-header {
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .live-queue-title {
+            gap: 10px;
+        }
+
+        .live-queue-title h3 {
+            color: var(--oromia-blue);
+        }
+
+        .live-queue-meta {
+            gap: 12px;
+            color: #667085;
+            font-size: 13px;
+        }
+
+        .live-indicator {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #2e7d32;
+        }
+
+        .live-indicator.offline {
+            background: #b42318;
+        }
+
+        .live-refresh-btn {
+            border: 0;
+            border-radius: 6px;
+            padding: 9px 12px;
+            background: var(--oromia-blue);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .live-queue-list {
+            overflow-x: auto;
+        }
+
+        .live-queue-list table {
+            min-width: 460px;
+        }
+
+        .live-empty {
+            padding: 18px 10px;
+            color: #667085;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .live-queue-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .live-queue-meta {
+                flex-wrap: wrap;
+            }
+        }
+
+        .lookup-grid,
+        .dashboard-tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            align-items: end;
+        }
+
+        .lookup-card input,
+        .dashboard-tools input,
+        .dashboard-tools select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d0d5dd;
+            border-radius: 6px;
+        }
+
+        .dashboard-tools .secondary-btn {
+            background: var(--oromia-blue);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media print {
+            body>*:not(#adminPanel) {
+                display: none !important;
+            }
+
+            .admin-header button,
+            .dashboard-tools,
+            .ops-form {
+                display: none !important;
+            }
+
+            .admin-panel {
+                max-width: none;
+                margin: 0;
+            }
+
+            .admin-shell {
+                box-shadow: none;
+                border: none;
+            }
+        }
+
+        .result-message {
+            margin-top: 12px;
+            color: var(--oromia-blue);
+            font-size: 14px;
+        }
+
+        .admin-table-wrap {
+            overflow-x: auto;
+        }
+
+        .chart-bar {
+            height: 10px;
+            background: var(--oromia-green);
+            border-radius: 4px;
+            min-width: 4px;
+        }
+
+        .ops-form {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 14px;
+        }
+
+        .ops-form .form-group {
+            margin-bottom: 12px;
+        }
+
+        .ops-form input,
+        .ops-form select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #d0d5dd;
+            font-size: 14px;
+        }
+
+        footer {
+            margin-top: 40px;
+            padding: 32px 5% 18px;
+            color: white;
+            background: #20265f;
+        }
+
+        .footer-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-content strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .footer-links a {
+            color: #f1f4ee;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus-visible {
+            text-decoration: underline;
+        }
+
+        .footer-copyright {
+            max-width: 1100px;
+            margin: 22px auto 0;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: #d9dce8;
+            font-size: 13px;
+        }
+
+        .portal-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 34px 20px;
+            border-top: 1px solid rgba(42, 49, 121, 0.16);
+        }
+
+        .portal-section h2 {
+            margin-bottom: 14px;
+            color: var(--oromia-blue);
+            font-size: 24px;
+        }
+
+        .about-copy {
+            max-width: 780px;
+            line-height: 1.7;
+        }
+
+        .faq-list {
+            border-top: 1px solid #dfe4dc;
+        }
+
+        .faq-list details {
+            padding: 16px 2px;
+            border-bottom: 1px solid #dfe4dc;
+        }
+
+        .faq-list summary {
+            color: var(--oromia-blue);
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .faq-list p {
+            max-width: 800px;
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+
+        .contact-layout {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.8fr) minmax(280px, 1.2fr);
+            gap: 38px;
+            align-items: start;
+        }
+
+        .contact-branch {
+            padding-left: 16px;
+            border-left: 4px solid var(--oromia-green);
+            line-height: 1.7;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 12px;
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #cbd2d8;
+            border-radius: 5px;
+            font: inherit;
+        }
+
+        .contact-form textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .contact-status {
+            min-height: 24px;
+            color: #237a3d;
+            font-weight: 600;
+        }
+
+        .contact-status.error {
+            color: #b42318;
+        }
+
+        .contact-inbox-table {
+            width: 100%;
+            min-width: 700px;
+            border-collapse: collapse;
+        }
+
+        .contact-inbox-table th,
+        .contact-inbox-table td {
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        .contact-inbox-table td.message-cell {
+            min-width: 240px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-inbox-wrap {
+            overflow-x: auto;
+        }
+
+        @media (max-width: 650px) {
+            .footer-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .contact-layout {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .home-screen {
+                min-height: 0;
+                grid-template-rows: auto minmax(0, auto) auto;
+            }
+
+            .home-stage {
+                min-height: 0;
+            }
+
+            .admin-panel {
+                padding: 14px;
+            }
+
+            .admin-header {
+                align-items: flex-start;
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .admin-body {
+                padding: 18px;
+            }
+
+            .table-section {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .analytics-charts {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                min-width: 0;
+            }
+
+            header,
+            body.home-page-mode > header {
+                padding: 9px 12px;
+                gap: 8px 10px;
+            }
+
+            .logo-area {
+                min-width: 0;
+                gap: 8px;
+            }
+
+            .brand-title h1,
+            body.home-page-mode .brand-title h1 {
+                font-size: 17px;
+            }
+
+            .brand-title p,
+            body.home-page-mode .brand-title p {
+                font-size: 11px;
+            }
+
+            #languageSwitcher {
+                margin-left: auto;
+            }
+
+            .top-nav,
+            body.home-page-mode .top-nav {
+                width: 100%;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                overflow-x: auto;
+                gap: 4px;
+                padding-bottom: 2px;
+            }
+
+            .top-nav a,
+            body.home-page-mode .top-nav a {
+                flex: 0 0 auto;
+                padding: 9px 11px;
+            }
+
+            .home-screen {
+                grid-template-rows: auto auto auto;
+            }
+
+            .home-sidebar {
+                max-width: 100%;
+            }
+
+            .home-stage {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: auto auto;
+                align-content: start;
+                gap: 22px;
+                padding: 32px 18px 24px;
+            }
+
+            .home-copy {
+                max-width: 100%;
+            }
+
+            .home-copy h2 {
+                font-size: clamp(30px, 9vw, 38px);
+            }
+
+            .home-copy > p:not(.home-eyebrow) {
+                max-width: 100%;
+                font-size: 15px;
+            }
+
+            .home-features {
+                gap: 8px;
+            }
+
+            .home-feature {
+                width: min(68px, 21%);
+            }
+
+            .home-login-card {
+                width: 100%;
+                max-width: 420px;
+                padding: 22px 18px;
+            }
+
+            .home-footer {
+                gap: 8px 14px;
+                padding: 14px 12px;
+                font-size: 11px;
+            }
+
+            .hero {
+                padding: 30px 16px;
+            }
+
+            .hero h2 {
+                font-size: clamp(22px, 7vw, 28px);
+            }
+
+            .container,
+            .service-selector,
+            .service-panel,
+            .admin-panel,
+            .live-queue {
+                width: auto;
+                max-width: 100%;
+                margin-right: 12px;
+                margin-left: 12px;
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+
+            .container {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 16px;
+                margin-top: 18px;
+            }
+
+            .service-selector {
+                gap: 8px;
+            }
+
+            .service-choice {
+                flex: 1 1 145px;
+                padding: 11px 12px;
+            }
+
+            .customer-logout-btn {
+                flex: 1 1 100%;
+            }
+
+            .card {
+                padding: 18px 16px;
+            }
+
+            .form-group input,
+            .form-group select,
+            .lookup-card input,
+            .dashboard-tools input,
+            .dashboard-tools select,
+            .ops-form input,
+            .ops-form select,
+            .contact-form input,
+            .contact-form textarea {
+                font-size: 16px;
+            }
+
+            .modal {
+                align-items: flex-start;
+                overflow-y: auto;
+                padding: 12px;
+            }
+
+            .modal-card {
+                margin: auto 0;
+                padding: 20px 16px;
+            }
+
+            .modal-card .actions {
+                flex-wrap: wrap;
+            }
+
+            .modal-card .actions button {
+                flex: 1 1 auto;
+                min-height: 44px;
+            }
+
+            .admin-panel,
+            body.admin-mode #adminPanel {
+                margin: 0;
+                padding: 8px;
+            }
+
+            .admin-shell {
+                border-radius: 10px;
+            }
+
+            .admin-header {
+                padding: 17px 14px;
+            }
+
+            .admin-header h2 {
+                font-size: 20px;
+            }
+
+            .toolbar {
+                width: 100%;
+            }
+
+            .toolbar button {
+                min-height: 42px;
+            }
+
+            .admin-body {
+                padding: 14px 10px 18px;
+            }
+
+            .admin-sidebar {
+                max-width: 100%;
+                gap: 4px;
+                padding: 8px;
+            }
+
+            .admin-nav-button {
+                min-height: 42px;
+                padding: 10px;
+            }
+
+            .stat-grid,
+            .analytics-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .stat-card,
+            .metric-box,
+            .analytics-section,
+            .chart-panel {
+                padding: 14px;
+            }
+
+            .stat-card .value,
+            .metric-box .value {
+                font-size: 21px;
+            }
+
+            .service-row,
+            .trend-row {
+                grid-template-columns: minmax(60px, 0.8fr) minmax(0, 1.5fr) 30px;
+                gap: 7px;
+                font-size: 12px;
+            }
+
+            .admin-table-wrap,
+            .contact-inbox-wrap,
+            .live-queue-list {
+                max-width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .admin-table-wrap table {
+                min-width: 600px;
+            }
+
+            .lookup-card,
+            .dashboard-tools,
+            .report-section,
+            .live-queue {
+                padding: 14px;
+            }
+
+            .lookup-grid,
+            .dashboard-tools {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .portal-section {
+                padding: 26px 16px;
+            }
+
+            .portal-section h2 {
+                font-size: 21px;
+            }
+
+            .contact-layout {
+                grid-template-columns: minmax(0, 1fr);
+                gap: 22px;
+            }
+
+            footer {
+                padding: 24px 16px 16px;
+            }
+
+            .footer-links {
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .logo-mark {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-title h1,
+            body.home-page-mode .brand-title h1 {
+                font-size: 15px;
+            }
+
+            .lang-switch button {
+                padding: 7px 8px;
+                font-size: 10px;
+            }
+
+            .stat-grid,
+            .analytics-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal" id="authModal">
+        <div class="modal-card">
+            <h3>Admin Login</h3>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="adminUsername">Username</label>
+                    <input id="adminUsername" type="text" value="admin" required>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword">Password</label>
+                    <input id="adminPassword" type="password" required>
+                </div>
+                <div class="actions">
+                    <button type="button" class="ghost-btn" onclick="closeAuthModal()">Cancel</button>
+                    <button type="submit" class="primary-btn">Login</button>
+                </div>
+            </form>
+            <div id="authMessage" class="status-message"></div>
+        </div>
+    </div>
+
+    <div class="modal" id="customerAuthModal">
+        <div class="modal-card">
+            <h3 id="customerAuthTitle">Customer Login</h3>
+            <form id="customerLoginForm">
+                <div class="form-group"><label for="customerLoginPhone">Phone Number</label><input
+                        id="customerLoginPhone" type="tel" required></div>
+                <div class="form-group"><label for="customerLoginPassword">Password</label><input
+                        id="customerLoginPassword" type="password" required></div>
+                <div class="actions"><button type="button" class="ghost-btn"
+                        onclick="closeCustomerAuthModal()">Cancel</button><button type="submit"
+                        class="primary-btn">Login</button></div>
+            </form>
+            <form id="customerRegisterForm" style="display:none;">
+                <div class="form-group"><label for="customerFullName">Full Name</label><input id="customerFullName"
+                        required></div>
+                <div class="form-group"><label for="customerRegisterPhone">Phone Number</label><input
+                        id="customerRegisterPhone" type="tel" required></div>
+                <div class="form-group"><label for="customerRegisterPassword">Password (8+ characters)</label><input
+                        id="customerRegisterPassword" type="password" minlength="8" required></div>
+                <div class="actions"><button type="button" class="ghost-btn"
+                        onclick="closeCustomerAuthModal()">Cancel</button><button type="submit"
+                        class="primary-btn">Create Account</button></div>
+            </form>
+            <form id="customerOtpForm" style="display:none;">
+                <p id="customerOtpInstructions" class="status-message">Enter the 6-digit code sent to your phone.</p>
+                <div class="form-group"><label for="customerRegistrationOtp">Verification code</label><input
+                        id="customerRegistrationOtp" type="text" inputmode="numeric" autocomplete="one-time-code"
+                        pattern="[0-9]{6}" maxlength="6" minlength="6" required></div>
+                <div class="actions">
+                    <button type="button" class="ghost-btn" onclick="returnToCustomerRegistration()">Back</button>
+                    <button type="button" class="ghost-btn" onclick="resendCustomerRegistrationOtp()">Resend code</button>
+                    <button type="submit" class="primary-btn">Verify</button>
+                </div>
+            </form>
+            <p id="customerAuthMessage" class="status-message"></p>
+            <p class="auth-switch" id="customerAuthSwitch" onclick="toggleCustomerAuthMode()">Create a customer account
+            </p>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-area">
+            <img class="logo-mark" src="assets/oromia-bank-mark.png" alt="">
+            <div class="brand-title">
+                <h1>Oromia Bank</h1>
+                <p>Baankii Oromiyaa</p>
+            </div>
+        </div>
+        <nav class="top-nav" aria-label="Main navigation">
+            <a href="#home" id="nav-home" data-public-target="home">Home</a>
+            <a href="#about" id="nav-about" data-public-target="about">About</a>
+            <a href="#contact" id="nav-contact" data-public-target="contact">Contact</a>
+        </nav>
+        <div id="languageSwitcher" class="lang-switch" aria-label="Language switcher">
+            <button data-lang="en" id="btn-en" class="active" type="button">EN</button>
+            <button data-lang="oro" id="btn-oro" type="button">ORO</button>
+            <button data-lang="am" id="btn-am" type="button">AMH</button>
+        </div>
+        <div id="accessSwitcher" class="access-switch" aria-label="Portal access switcher">
+            <button class="admin-button" id="customerToggleBtn" type="button">Customer Login</button>
+            <button class="admin-button" id="adminToggleBtn" type="button">Admin Login</button>
+        </div>
+        <div id="servicesNavDropdown" hidden aria-hidden="true">
+            <a href="#services" id="nav-services" aria-expanded="false">Services</a>
+            <div id="servicesNavMenu">
+                <button type="button" data-nav-service="ticket" id="service-nav-ticket">Digital Ticket</button>
+                <button type="button" data-nav-service="loan" id="service-nav-loan">Micro-Loan Pre-Screening</button>
+                <button type="button" data-nav-service="branch" id="service-nav-branch">Live Branch</button>
+                <button type="button" data-nav-service="track" id="service-nav-track">Track Your Service</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="home-screen" id="home" data-public-page="home">
+        <svg class="home-icon-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <symbol id="home-icon-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z" fill="currentColor"/></symbol>
+            <symbol id="home-icon-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21a8 8 0 0 1 16 0z" fill="currentColor"/></symbol>
+            <symbol id="home-icon-bank" viewBox="0 0 24 24"><path d="M12 3 2 8v2h20V8zm-7 9h3v6H5zm6 0h3v6h-3zm6 0h3v6h-3zM3 20h18v2H3z" fill="currentColor"/></symbol>
+            <symbol id="home-icon-service" viewBox="0 0 24 24"><path d="m19.4 13 .1-1-.1-1 2-1.5-2-3.5-2.4 1a8 8 0 0 0-1.7-1L15 3h-6l-.4 2.9a8 8 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5-.1 1 .1 1-2 1.5 2 3.5 2.4-1a8 8 0 0 0 1.7 1L9 22h6l.4-2.9a8 8 0 0 0 1.7-1l2.4 1 2-3.5zM12 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7" fill="currentColor"/></symbol>
+            <symbol id="home-icon-about" viewBox="0 0 24 24"><path d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1m8 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4m0 6a5 5 0 0 0-5 5h10a5 5 0 0 0-5-5" fill="currentColor"/></symbol>
+            <symbol id="home-icon-contact" viewBox="0 0 24 24"><path d="M6.6 2 10 6.4 8 9c1.2 2.5 3.1 4.4 5.6 5.6l2.6-2 4.4 3.4-.8 4a2 2 0 0 1-2 1.6C9.5 21.6 2.4 14.5 2.4 6.2a2 2 0 0 1 1.6-2z" fill="currentColor"/></symbol>
+            <symbol id="home-icon-help" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20m0 17a1.25 1.25 0 1 1 0-2.5 1.25 1.25 0 0 1 0 2.5m1.7-6.7c-.8.5-1.2 1-1.2 1.9h-2c0-1.6.7-2.5 2-3.3 1-.6 1.4-1.1 1.4-2 0-1.1-.8-1.8-2-1.8s-2 .8-2.1 2H7.7c.1-2.4 1.8-4 4.3-4s4.2 1.5 4.2 3.8c0 1.6-.8 2.6-2.5 3.5" fill="currentColor"/></symbol>
+            <symbol id="home-icon-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 5.4-3.8 9.4-9 11-5.2-1.6-9-5.6-9-11V6zm-1 13.2 6.2-6.1-1.4-1.4-4.8 4.7-2.2-2.2-1.4 1.4z" fill="currentColor"/></symbol>
+            <symbol id="home-icon-add" viewBox="0 0 24 24"><path d="M15 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M7 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6m8 1c-3 0-9 1.5-9 4.5V21h14v-2.5c0-3-2-4.5-5-4.5M7 15c-2.7 0-6 1.3-6 3.5V21h4v-2.5c0-1.6.8-2.8 2-3.5m12-8v3h-3v2h3v3h2v-3h3v-2h-3V7z" fill="currentColor"/></symbol>
+        </svg>
+        <aside class="home-sidebar" aria-label="Portal shortcuts">
+            <a class="home-side-link active" href="#home" data-home-target="home">
+                <svg class="home-side-icon"><use href="#home-icon-home"></use></svg><span>Home</span>
+            </a>
+            <button class="home-side-link" type="button" onclick="document.getElementById('adminToggleBtn').click()">
+                <svg class="home-side-icon"><use href="#home-icon-user"></use></svg><span>Admin Login</span>
+            </button>
+            <button class="home-side-link" type="button" onclick="document.getElementById('customerToggleBtn').click()">
+                <svg class="home-side-icon"><use href="#home-icon-bank"></use></svg><span>Customer Login</span>
+            </button>
+            <button class="home-side-link" type="button" data-home-target="services">
+                <svg class="home-side-icon"><use href="#home-icon-service"></use></svg><span>Service</span>
+            </button>
+            <a class="home-side-link" href="#about" data-home-target="about">
+                <svg class="home-side-icon"><use href="#home-icon-about"></use></svg><span>About</span>
+            </a>
+            <a class="home-side-link" href="#contact" data-home-target="contact">
+                <svg class="home-side-icon"><use href="#home-icon-contact"></use></svg><span>Contact</span>
+            </a>
+            <a class="home-side-link" href="#faq" data-home-target="about">
+                <svg class="home-side-icon"><use href="#home-icon-help"></use></svg><span>FAQ</span>
+            </a>
+        </aside>
+        <div class="home-stage">
+            <svg class="home-scene" viewBox="0 0 1440 760" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+                <defs>
+                    <linearGradient id="homeGlass" x2="0" y2="1"><stop stop-color="#4c9bc9"/><stop offset="1" stop-color="#174d79"/></linearGradient>
+                    <linearGradient id="homeWall" x2="0" y2="1"><stop stop-color="#f6f3e8"/><stop offset="1" stop-color="#c7d2cd"/></linearGradient>
+                    <linearGradient id="homeGround" x2="0" y2="1"><stop stop-color="#94b879"/><stop offset="1" stop-color="#628d55"/></linearGradient>
+                </defs>
+                <g fill="#fff" opacity=".52">
+                    <ellipse cx="320" cy="115" rx="140" ry="25"/><ellipse cx="380" cy="103" rx="75" ry="37"/>
+                    <ellipse cx="1030" cy="92" rx="115" ry="20"/><ellipse cx="1080" cy="80" rx="66" ry="32"/>
+                </g>
+                <path d="M0 455 Q220 410 425 464 T870 449 T1440 440V760H0Z" fill="#8eaf7b" opacity=".6"/>
+                <path d="M0 525 Q260 460 510 521 T1030 500 T1440 492V760H0Z" fill="url(#homeGround)"/>
+                <path d="M0 685 Q375 644 680 674 T1440 649V760H0Z" fill="#779d61"/>
+                <g opacity=".95">
+                    <path d="M440 452h410v225H440z" fill="url(#homeWall)"/>
+                    <path d="M414 438h440v28H414z" fill="#f8f6ef"/>
+                    <path d="M478 482h98v78h-98zm119 0h98v78h-98zm119 0h98v78h-98z" fill="#79b5d4"/>
+                    <path d="M478 581h98v72h-98zm119 0h98v72h-98zm119 0h98v72h-98z" fill="#5c9fc5"/>
+                    <path d="M825 339 1137 244l303 80v357H825z" fill="url(#homeGlass)"/>
+                    <path d="m803 329 334-106 303 81-303 100z" fill="#d8e6e9"/>
+                    <path d="m850 347 287-91v424H850z" fill="#357da8"/>
+                    <path d="m1152 258 260 70v352h-260z" fill="#2b709b"/>
+                    <path d="M887 333v333m85-360v360m85-388v388m97-382v382m85-357v357" stroke="#d5edf5" stroke-width="8" opacity=".83"/>
+                    <path d="M850 423h562M850 512h562M850 602h562" stroke="#d5edf5" stroke-width="7" opacity=".82"/>
+                    <path d="m1082 366 54-17v85l-54 16z" fill="#f6fbfd"/>
+                    <path d="M1090 435v-35l15-5v35m18-37v32" stroke="#194e76" stroke-width="7"/>
+                    <text x="1095" y="469" fill="#f5fbff" font-family="Segoe UI, sans-serif" font-size="23" font-weight="700" transform="rotate(-17 1095 469)">OROMIA BANK</text>
+                </g>
+                <g fill="#3f754b">
+                    <circle cx="145" cy="536" r="48"/><circle cx="190" cy="510" r="56"/><circle cx="235" cy="543" r="47"/>
+                    <circle cx="1315" cy="568" r="48"/><circle cx="1360" cy="535" r="56"/><circle cx="1400" cy="568" r="44"/>
+                </g>
+                <g stroke="#725d3c" stroke-width="14"><path d="M190 544v130M1360 560v118"/></g>
+                <path d="M320 706h1000" stroke="#d7dbc7" stroke-width="10" opacity=".8"/>
+            </svg>
+            <div class="home-copy">
+                <p class="home-eyebrow">Babile Main Branch</p>
+                <h2 id="txt-hero-title">Banking Made Simple &amp; Secure</h2>
+                <p id="txt-hero-sub">Access your account, manage your services and more — all in one place.</p>
+                <div class="home-features" aria-label="Portal benefits">
+                    <div class="home-feature">
+                        <span class="home-feature-icon"><svg><use href="#home-icon-user"></use></svg></span>
+                        <span>Easy<br>Access</span>
+                    </div>
+                    <div class="home-feature">
+                        <span class="home-feature-icon"><svg><use href="#home-icon-shield"></use></svg></span>
+                        <span>Secure<br>Services</span>
+                    </div>
+                    <div class="home-feature">
+                        <span class="home-feature-icon"><svg><use href="#home-icon-service"></use></svg></span>
+                        <span>Fast<br>Service</span>
+                    </div>
+                    <div class="home-feature">
+                        <span class="home-feature-icon"><svg><use href="#home-icon-contact"></use></svg></span>
+                        <span>Branch<br>Support</span>
+                    </div>
+                </div>
+            </div>
+            <div class="home-login-card">
+                <img class="home-card-mark" src="assets/oromia-bank-mark.png" alt="">
+                <h3>Welcome to Oromia Bank</h3>
+                <p>Choose how you would like to access the branch portal.</p>
+                <button class="home-login-action customer" type="button"
+                    onclick="document.getElementById('customerToggleBtn').click()">
+                    <span class="home-action-icon"><svg><use href="#home-icon-user"></use></svg></span>
+                    <span>Customer Login</span><span class="home-action-arrow" aria-hidden="true">›</span>
+                </button>
+                <button class="home-login-action staff" type="button"
+                    onclick="document.getElementById('adminToggleBtn').click()">
+                    <span class="home-action-icon"><svg><use href="#home-icon-shield"></use></svg></span>
+                    <span>Admin Login</span><span class="home-action-arrow" aria-hidden="true">›</span>
+                </button>
+                <button class="home-login-action register" type="button" onclick="openCustomerRegistration()">
+                    <span class="home-action-icon"><svg><use href="#home-icon-add"></use></svg></span>
+                    <span>New User? Register</span><span class="home-action-arrow" aria-hidden="true">›</span>
+                </button>
+            </div>
+        </div>
+        <footer class="home-footer">
+            <span><strong>Oromia Bank</strong> © 2026. All rights reserved.</span>
+            <span class="home-footer-note">Safe&nbsp;&nbsp; · &nbsp;&nbsp;Trusted&nbsp;&nbsp; · &nbsp;&nbsp;Always With You</span>
+        </footer>
+    </section>
+
+    <main class="public-services-page public-page-active" id="services" data-public-page="services">
+    <div class="service-selector" aria-label="Customer service selection">
+        <button class="service-choice active" type="button" data-service="ticket" id="service-ticket">Digital
+            Ticket</button>
+        <button class="service-choice" type="button" data-service="loan" id="service-loan">Micro-Loan
+            Pre-Screening</button>
+        <button class="service-choice" type="button" data-service="branch" id="service-branch">Live Branch</button>
+        <button class="service-choice" type="button" data-service="track" id="service-track">Track Your Service</button>
+        <button class="customer-logout-btn" id="customerLogoutBtn" type="button" hidden>Customer Logout</button>
+    </div>
+
+    <div class="service-panel active" id="panel-ticket">
+        <div class="container">
+            <div class="card">
+                <h3 id="txt-q-title">Get Digital Queue Ticket</h3>
+                <div class="form-group">
+                    <label id="lbl-name">Full Name</label>
+                    <input type="text" id="q-name" placeholder="e.g. Ahmed Ali">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-phone">Phone Number</label>
+                    <input type="text" id="q-phone" placeholder="0911......">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-account-number">Bank Account Number</label>
+                    <input type="text" id="q-account-number" placeholder="Enter your bank account number" required autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-service">Service Type</label>
+                    <select id="q-service">
+                        <option value="Cash Deposit/Withdrawal" id="option-cash">Cash Deposit / Withdrawal</option>
+                        <option value="Micro Loan Inquiry" id="option-loan">Micro Loan Inquiry</option>
+                        <option value="Account Opening" id="option-account">Account Opening</option>
+                    </select>
+                </div>
+                <button class="btn-submit" onclick="issueTicket()" id="btn-q-submit">Get Ticket</button>
+
+                <div class="ticket-result" id="ticket-res">
+                    <p>Your Ticket: <strong id="res-num" style="color:var(--oromia-blue); font-size:18px;"></strong></p>
+                    <p>Est. Wait: <span id="res-wait">12 Mins</span></p>
+                    <p id="res-queue-position" aria-live="polite">Checking customers ahead...</p>
+                    <p id="res-queue-notice" style="margin-top: 6px; font-size: 13px;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="service-panel" id="panel-loan">
+        <div class="container">
+            <div class="card">
+                <h3 id="txt-loan-title">Micro-Loan Pre-Screening</h3>
+                <div class="form-group">
+                    <label id="lbl-applicant">Applicant Name</label>
+                    <input type="text" id="l-name" placeholder="Full Name">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-loan-type">Collateral Type</label>
+                    <select id="l-type">
+                        <option value="Groundnut Harvest" id="option-groundnut">Groundnut Harvest Stock</option>
+                        <option value="Livestock Trade" id="option-livestock">Livestock / Cattle Stock</option>
+                        <option value="Irrigation Pump" id="option-irrigation">Irrigation Equipment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label id="lbl-asset-val">Estimated Asset Value (ETB)</label>
+                    <input type="number" id="l-val" placeholder="e.g. 200000">
+                </div>
+                <button class="btn-submit" onclick="calcLoan()" id="btn-l-submit">Estimate Eligibility</button>
+
+                <div class="loan-result" id="loan-res">
+                    <p id="label-est-loan">Est. Loan Amount:</p>
+                    <h4 id="res-loan-amount" style="color:var(--oromia-green); font-size:20px;">0 ETB</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="service-panel" id="panel-branch">
+        <div class="container">
+            <div class="card">
+                <h3 id="txt-status-title">Live Branch Status</h3>
+                <p><strong id="label-branch">Branch:</strong> Babile Main Branch</p>
+                <p style="margin-top:8px;"><strong id="label-network">Network Mode:</strong> <span class="status-badge"
+                        id="publicBranchStatus">ONLINE</span></p>
+                <p style="margin-top:8px;"><strong id="label-wait">Avg Waiting Time:</strong> <span
+                        id="publicWaitTime">12</span>
+                    <span id="label-minutes">Minutes</span>
+                </p>
+                <p style="margin-top:8px;"><strong id="label-counters">Active Counter:</strong> <span
+                        id="publicCounters">Counter 1 &
+                        2</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="service-panel" id="panel-track">
+        <section class="lookup-card">
+            <h3 id="track-title" style="color: var(--oromia-blue); margin-bottom: 14px;">Track Your Service</h3>
+            <div class="lookup-grid">
+                <div class="form-group">
+                    <label for="ticketLookup" id="label-ticket-number">Ticket number</label>
+                    <input id="ticketLookup" placeholder="e.g. BBL-1234">
+                </div>
+                <button class="btn-submit" id="btn-check-ticket" type="button" onclick="lookupTicket()">Check
+                    Ticket</button>
+                <div class="form-group">
+                    <label for="loanLookup" id="label-loan-id">Loan application ID</label>
+                    <input id="loanLookup" type="number" placeholder="e.g. 12">
+                </div>
+                <button class="btn-submit" id="btn-check-loan" type="button" onclick="lookupLoan()">Check Loan</button>
+            </div>
+            <div id="lookupResult" class="result-message"></div>
+        </section>
+    </div>
+
+    <section class="live-queue" aria-labelledby="liveQueueTitle">
+        <div class="live-queue-header">
+            <div>
+                <div class="live-queue-title">
+                    <span class="live-indicator" id="liveQueueIndicator" aria-hidden="true"></span>
+                    <h3 id="liveQueueTitle">Live Ticket Viewer</h3>
+                </div>
+                <div class="live-queue-meta" aria-live="polite">
+                    <span id="liveQueueConnection">Connecting</span>
+                    <span id="liveQueueUpdated">Waiting for update</span>
+                </div>
+            </div>
+            <button class="live-refresh-btn" id="btn-refresh-queue" type="button" onclick="loadLiveQueue()"
+                aria-label="Refresh live ticket queue">Refresh</button>
+        </div>
+        <div class="live-queue-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th id="queue-col-position">Position</th>
+                        <th id="queue-col-ticket">Ticket</th>
+                        <th id="queue-col-service">Service</th>
+                        <th id="queue-col-status">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="liveQueueBody">
+                    <tr>
+                        <td colspan="4" class="live-empty">Loading tickets...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    </main>
+
+    <main class="public-about-page" id="about" data-public-page="about">
+    <section class="portal-section" id="aboutInfo" aria-labelledby="aboutTitle">
+        <h2 id="aboutTitle">About Oromia Bank</h2>
+        <p class="about-copy" id="aboutCopy">Oromia Bank S.C. is an Ethiopian financial institution serving individuals,
+            businesses, farmers, and communities. This portal supports customers visiting the Babile Main Branch with
+            digital queue tickets, service tracking, and loan pre-screening.</p>
+    </section>
+
+    <section class="portal-section" id="faq" aria-labelledby="faqTitle">
+        <h2 id="faqTitle">Frequently Asked Questions</h2>
+        <div class="faq-list">
+            <details>
+                <summary id="faqTicketQuestion">How do I get a queue ticket?</summary>
+                <p id="faqTicketAnswer">Choose Digital Ticket, enter your name and phone number, select a service, then
+                    submit. Keep the ticket number to track your place in the queue.</p>
+            </details>
+            <details>
+                <summary id="faqLoanQuestion">What does the loan pre-screening do?</summary>
+                <p id="faqLoanAnswer">It provides an initial estimate based on the information entered. It is not a loan
+                    approval; the branch will review any application.</p>
+            </details>
+            <details>
+                <summary id="faqContactQuestion">Who can read my contact message?</summary>
+                <p id="faqContactAnswer">Contact messages are stored privately and can only be viewed by authorized bank
+                    administrators and managers.</p>
+            </details>
+        </div>
+    </section>
+    </main>
+
+    <section class="portal-section" id="contact" data-public-page="contact" aria-labelledby="contactTitle">
+        <h2 id="contactTitle">Contact Us</h2>
+        <div class="contact-layout">
+            <div class="contact-branch">
+                <strong id="contactBranchName">Babile Main Branch</strong>
+                <p id="contactBranchNote">Send a comment or service question to the branch manager using the form.</p>
+            </div>
+            <form class="contact-form" id="contactForm">
+                <div>
+                    <label for="contactName" id="contactNameLabel">Your name</label>
+                    <input id="contactName" name="name" autocomplete="name" maxlength="100" required>
+                </div>
+                <div>
+                    <label for="contactDetails" id="contactDetailsLabel">Phone or email (optional)</label>
+                    <input id="contactDetails" name="contact" autocomplete="email" maxlength="120">
+                </div>
+                <div>
+                    <label for="contactMessage" id="contactMessageLabel">Comment</label>
+                    <textarea id="contactMessage" name="message" maxlength="2000" required></textarea>
+                </div>
+                <button class="btn-submit" id="contactSubmit" type="submit">Send comment</button>
+                <p class="contact-status" id="contactStatus" aria-live="polite"></p>
+            </form>
+        </div>
+    </section>
+
+    <section class="admin-panel hidden" id="adminPanel">
+        <div class="admin-shell">
+            <div class="admin-header">
+                <div>
+                    <h2>Admin Dashboard</h2>
+                    <p style="opacity: 0.9; margin-top: 6px;">Branch operations and service monitoring</p>
+                </div>
+                <div class="toolbar">
+                    <button class="secondary-btn" id="exportTicketsBtn" type="button"
+                        onclick="exportAdminData('tickets')">Export Tickets</button>
+                    <button class="secondary-btn" id="exportLoanBtn" type="button"
+                        onclick="exportAdminData('loans')">Export Approvals</button>
+                    <button class="secondary-btn" onclick="toggleAdminDashboard()">Close</button>
+                    <button class="primary-btn" onclick="handleLogout()">Logout</button>
+                </div>
+            </div>
+
+            <div class="admin-body">
+                <div class="admin-layout">
+                    <nav class="admin-sidebar" aria-label="Admin dashboard sections">
+                        <button class="admin-nav-button active" type="button" data-admin-target="queueSection" aria-controls="queueSection" aria-current="page">Queue Management</button>
+                        <button class="admin-nav-button" type="button" data-admin-target="dailyReportSection" aria-controls="dailyReportSection">Active Tickets by Day</button>
+                        <button class="admin-nav-button" type="button" data-admin-target="auditSection" aria-controls="auditSection">Recent Activity</button>
+                        <button class="admin-nav-button" type="button" data-admin-target="contactMessagesSection" aria-controls="contactMessagesSection">Customer comments</button>
+                        <button class="admin-nav-button" type="button" data-admin-target="branchOpsSection" aria-controls="branchOpsSection">Branch Operations</button>
+                        <button class="admin-nav-button" type="button" data-admin-target="passwordSection" aria-controls="passwordSection">Account Security</button>
+                    </nav>
+
+                    <main class="admin-content" id="adminContent">
+                        <section class="admin-page" id="queueSection" data-admin-section="queueSection">
+                            <h3 class="admin-page-heading">Queue Management</h3>
+                <div class="dashboard-tools">
+                    <div>
+                        <label for="adminSearch">Search records</label>
+                        <input id="adminSearch" placeholder="Name, phone, or ticket number">
+                    </div>
+                    <div>
+                        <label for="adminStatus">Ticket status</label>
+                        <select id="adminStatus">
+                            <option value="">All statuses</option>
+                            <option value="WAITING">Waiting</option>
+                        </select>
+                    </div>
+                    <button class="btn-submit" type="button" onclick="loadAdminDashboard()">Search Dashboard</button>
+                    <button class="secondary-btn" type="button" onclick="printDashboard()">Print Report</button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="label">Customers Waiting</div>
+                        <div class="value" id="waitingCount">00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Loan Requests</div>
+                        <div class="value" id="loanCount">00</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Avg. Wait Time</div>
+                        <div class="value" id="avgWaitDisplay">12 min</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Branch Status</div>
+                        <div class="value" id="branchStatusDisplay">Online</div>
+                    </div>
+                </div>
+
+                <div class="analytics-section">
+                    <h3>Analytics Overview</h3>
+                    <div class="analytics-grid">
+                        <div class="metric-box">
+                            <div class="label">Active Ticket Records</div>
+                            <div class="value" id="analyticsTotalTickets">0</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="label">Currently Waiting</div>
+                            <div class="value" id="analyticsWaitingTickets">0</div>
+                        </div>
+                        <div class="metric-box">
+                            <div class="label">Approved Loans</div>
+                            <div class="value" id="analyticsApprovedLoans">0</div>
+                        </div>
+                    </div>
+                    <div class="analytics-charts">
+                        <div class="chart-panel">
+                            <h4>Service Mix</h4>
+                            <div id="serviceBreakdownChart"></div>
+                        </div>
+                        <div class="chart-panel">
+                            <h4>7-Day Ticket Trend</h4>
+                            <div id="analyticsTrendChart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Customer</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminQueueBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div>
+                        <h3 style="color: var(--oromia-blue); margin-bottom: 10px;">Loan Review</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Applicant</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminLoanBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+                        </section>
+
+                <section class="admin-page report-section" id="dailyReportSection" data-admin-section="dailyReportSection" hidden>
+                    <h3 style="color: var(--oromia-blue); margin-bottom: 12px;">Active Tickets by Creation Day</h3>
+                    <div id="dailyTicketChart"></div>
+                </section>
+
+                <section class="admin-page report-section" id="auditSection" data-admin-section="auditSection" hidden>
+                    <h3 style="color: var(--oromia-blue); margin-bottom: 12px;">Recent Activity</h3>
+                    <div class="admin-table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="auditBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="admin-page report-section" id="contactMessagesSection" data-admin-section="contactMessagesSection" hidden>
+                    <div class="live-queue-header">
+                        <div>
+                            <h3 id="contactInboxTitle">Customer comments</h3>
+                            <p id="contactInboxIntro">Private messages submitted through Contact Us.</p>
+                        </div>
+                        <button class="live-refresh-btn" id="refreshContactMessages" type="button">Refresh</button>
+                    </div>
+                    <div class="contact-inbox-wrap">
+                        <table class="contact-inbox-table">
+                            <thead>
+                                <tr>
+                                    <th id="inboxNameHeading">Name</th>
+                                    <th id="inboxContactHeading">Contact</th>
+                                    <th id="inboxMessageHeading">Comment</th>
+                                    <th id="inboxDateHeading">Received</th>
+                                    <th id="inboxStatusHeading">Status</th>
+                                    <th id="inboxActionHeading">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contactMessagesBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section class="admin-page" id="branchOpsSection" data-admin-section="branchOpsSection" hidden>
+                <div class="alert-box">
+                    <strong>System Notice:</strong> Rural branch network is stable. Please prioritize SME loan approvals
+                    before 3:00 PM.
+                </div>
+
+                <div class="ops-form" id="branchOperationsForm">
+                    <h3 style="color: var(--oromia-blue); margin-bottom: 16px;">Branch Operations</h3>
+                    <div class="form-group">
+                        <label>Counter Status</label>
+                        <select id="branchStatus">
+                            <option>ONLINE</option>
+                            <option>OFFLINE</option>
+                            <option>MAINTENANCE</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Average Wait Minutes</label>
+                        <input id="branchWait" type="number" min="0" value="12">
+                    </div>
+                    <div class="form-group">
+                        <label>Active Counters</label>
+                        <select id="branchCounters">
+                            <option>Counter 1 Active</option>
+                            <option>Counter 2 Active</option>
+                            <option>Counter 3 Reserved</option>
+                        </select>
+                    </div>
+                    <button class="btn-submit" type="button" onclick="saveBranchSettings()">Save Branch
+                        Settings</button>
+                </div>
+                </section>
+
+                <section class="admin-page ops-form" id="passwordSection" data-admin-section="passwordSection" hidden>
+                    <h3 style="color: var(--oromia-blue); margin-bottom: 16px;">Account Security</h3>
+                    <div class="form-group"><label>Current Password</label><input id="currentPassword" type="password">
+                    </div>
+                    <div class="form-group"><label>New Password</label><input id="newPassword" type="password"
+                            minlength="8"></div>
+                    <button class="btn-submit" type="button" onclick="changeAdminPassword()">Change Password</button>
+                </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div>
+                <strong>Oromia Bank</strong>
+                <span>Babile Main Branch</span>
+            </div>
+            <nav class="footer-links" aria-label="Footer navigation">
+                <a href="#about" id="footerAboutLink">About</a>
+                <a href="#faq" id="footerFaqLink">FAQ</a>
+                <a href="#contact" id="footerContactLink">Contact Us</a>
+            </nav>
+        </div>
+        <p class="footer-copyright" id="footerCopyright">Oromia Bank Rural Branch Smart Service Portal &copy; 2026 |
+            Babile Branch</p>
+    </footer>
+
+    <script>
+        const API_BASE = window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.origin;
+        const authState = {
+            token: localStorage.getItem('oromia_admin_token') || '',
+            username: localStorage.getItem('oromia_admin_username') || '',
+            role: localStorage.getItem('oromia_admin_role') || ''
+        };
+
+        const customerState = {
+            token: localStorage.getItem('oromia_customer_token') || '',
+            fullName: localStorage.getItem('oromia_customer_name') || '',
+            phone: localStorage.getItem('oromia_customer_phone') || ''
+        };
+
+        const adminState = {
+            queue: [],
+            loans: [],
+            contactMessages: []
+        };
+        let activeTicketNumber = '';
+        let activePublicPage = 'services';
+        let contactMessageSending = false;
+        let contactStatusTimer = 0;
+        let customerRegistrationPhone = '';
+
+        const i18n = {
+            en: {
+                heroTitle: 'Banking Made Simple & Secure',
+                heroSub: 'Access your account, manage your services and more — all in one place.',
+                qTitle: 'Get Digital Queue Ticket',
+                name: 'Full Name',
+                phone: 'Phone Number',
+                accountNumber: 'Bank Account Number',
+                service: 'Service Type',
+                btnQ: 'Get Ticket',
+                loanTitle: 'Micro-Loan Pre-Screening',
+                collateral: 'Collateral Type',
+                assetVal: 'Estimated Asset Value (ETB)',
+                btnL: 'Estimate Eligibility',
+                statusTitle: 'Live Branch Status',
+                accessCustomer: 'Customer Login', accessCustomerLogout: 'Customer Logout',
+                accessAdmin: 'Admin Login', accessAdminPanel: 'Dashboard',
+                navHome: 'Home', navServices: 'Services', navAbout: 'About', navContact: 'Contact',
+                serviceTicket: 'Digital Ticket', serviceLoan: 'Micro-Loan Pre-Screening',
+                serviceBranch: 'Live Branch', serviceTrack: 'Track Your Service',
+                optionCash: 'Cash Deposit / Withdrawal', optionLoan: 'Micro Loan Inquiry', optionAccount: 'Account Opening',
+                optionGroundnut: 'Groundnut Harvest Stock', optionLivestock: 'Livestock / Cattle Stock', optionIrrigation: 'Irrigation Equipment',
+                namePlaceholder: 'e.g. Ahmed Ali', phonePlaceholder: '0911......',
+                labelEstLoan: 'Est. Loan Amount:', labelBranch: 'Branch:', labelNetwork: 'Network Mode:',
+                labelWait: 'Avg Waiting Time:', labelMinutes: 'Minutes', labelCounters: 'Active Counter:',
+                trackTitle: 'Track Your Service', labelTicketNumber: 'Ticket number',
+                btnCheckTicket: 'Check Ticket', labelLoanId: 'Loan application ID', btnCheckLoan: 'Check Loan',
+                queueTitle: 'Live Ticket Viewer', btnRefreshQueue: 'Refresh',
+                queueColPosition: 'Position',
+                queueColTicket: 'Ticket', queueColService: 'Service', queueColStatus: 'Status',
+                queueLoading: 'Loading tickets...', footerText: 'Oromia Bank Rural Branch Smart Service Portal © 2026 | Babile Branch',
+                aboutTitle: 'About Oromia Bank', aboutCopy: 'Oromia Bank S.C. is an Ethiopian financial institution serving individuals, businesses, farmers, and communities. This portal supports customers visiting the Babile Main Branch with digital queue tickets, service tracking, and loan pre-screening.',
+                faqTitle: 'Frequently Asked Questions', faqTicketQuestion: 'How do I get a queue ticket?',
+                faqTicketAnswer: 'Choose Digital Ticket, enter your name, phone number, and bank account number, select a service, then submit. Keep the ticket number to track your place in the queue.',
+                faqLoanQuestion: 'What does the loan pre-screening do?',
+                faqLoanAnswer: 'It provides an initial estimate based on the information entered. It is not a loan approval; the branch will review any application.',
+                faqContactQuestion: 'Who can read my contact message?',
+                faqContactAnswer: 'Contact messages are stored privately and can only be viewed by authorized bank administrators and managers.',
+                contactTitle: 'Contact Us', contactBranchNote: 'Send a comment or service question to the branch manager using the form.',
+                contactNameLabel: 'Your name', contactDetailsLabel: 'Phone or email (optional)', contactMessageLabel: 'Comment',
+                contactSend: 'Send comment', contactSending: 'Sending...', contactSuccess: 'Your comment was sent to the branch manager.', contactError: 'Your comment could not be sent. Please try again.',
+                footerAbout: 'About', footerFaq: 'FAQ', footerContact: 'Contact Us',
+                inboxTitle: 'Customer comments', inboxIntro: 'Private messages submitted through Contact Us.',
+                inboxName: 'Name', inboxContact: 'Contact', inboxMessage: 'Comment', inboxDate: 'Received', inboxStatus: 'Status', inboxAction: 'Action',
+                inboxUnread: 'Unread', inboxRead: 'Read', inboxMarkRead: 'Mark read', inboxEmpty: 'No customer comments yet.'
+            },
+            oro: {
+                heroTitle: 'Baankii Salphaa fi Nageenya Qabu',
+                heroSub: 'Herrega kee argadhu, tajaajila kee bulchi, fi waan baayyee bakka tokkotti hojjedhu.',
+                qTitle: 'Lakkawwii Toraa Fuudhuuf',
+                name: 'Maqaa Guutuu',
+                phone: 'Lakk. Bilbilaa',
+                accountNumber: 'Lakkoofsa Herrega Baankii',
+                service: 'Gosa Tajaajilaa',
+                btnQ: 'Tiketti Fudhadhu',
+                loanTitle: 'Xiinxala Ulaagaa Liqii',
+                collateral: 'Gosa Qabeenya Wabii',
+                assetVal: 'Tilmaama Qabeenyaa (ETB)',
+                btnL: 'Saffisaan Madaali',
+                statusTitle: 'Haala Damee Babile',
+                accessCustomer: 'Seensa Maamilaa', accessCustomerLogout: 'Ba\'ii Maamilaa',
+                accessAdmin: 'Seensa Bulchaa', accessAdminPanel: 'Dashboard Bulchaa',
+                navHome: 'Mana', navServices: 'Tajaajila', navAbout: 'Waa\'ee', navContact: 'Quunnamtii',
+                serviceTicket: 'Tikeetii Dijitaalaa', serviceLoan: 'Qorannoo Duraa Liqii',
+                serviceBranch: 'Damee Kallattii', serviceTrack: 'Tajaajila Hordofi',
+                optionCash: 'Maallaqa Galchuu / Baasuu', optionLoan: 'Gaaffii Liqii Xixiqqaa', optionAccount: 'Herrega Banuu',
+                optionGroundnut: 'Oomisha Arachii', optionLivestock: 'Daldala Beeyladaa', optionIrrigation: 'Meeshaa Jallisii',
+                namePlaceholder: 'fkn. Ahmed Ali', phonePlaceholder: '0911......',
+                labelEstLoan: 'Tilmaama Hanga Liqii:', labelBranch: 'Damee:', labelNetwork: 'Haala Neetworkii:',
+                labelWait: 'Yeroo Eegumsaa Giddugaleessaa:', labelMinutes: 'Daqiiqaa', labelCounters: 'Kaawuntara Hojii Irra Jiru:',
+                trackTitle: 'Tajaajila Hordofi', labelTicketNumber: 'Lakkoofsa Tikeetii',
+                btnCheckTicket: 'Tikeetii Mirkaneessi', labelLoanId: 'ID Iyyannoo Liqii', btnCheckLoan: 'Liqii Mirkaneessi',
+                queueTitle: 'Daawataa Tikeetii Kallattii', btnRefreshQueue: 'Haaromsi',
+                queueColPosition: 'Tartiiba',
+                queueColTicket: 'Tikeetii', queueColService: 'Tajaajila', queueColStatus: 'Haala',
+                queueLoading: 'Tikeetii fe' + "'" + 'aa jira...', footerText: 'Baankii Oromiyaa - Tajaajila Damee Baadiyyaa © 2026 | Damee Babile',
+                aboutTitle: 'Waa\'ee Baankii Oromiyaa', aboutCopy: 'Baankiin Oromiyaa dhaabbata faayinaansii Itoophiyaa ta\'ee namoota dhuunfaa, dhaabbilee daldalaa, qonnaan bultoota fi hawaasa tajaajila. Poortaalli kun maamiltoota Damee Guddaa Babilee dhufan tikeetii toraa dijitaalaa, hordoffii tajaajilaa fi qorannoo duraa liqii irratti gargaara.',
+                faqTitle: 'Gaaffilee Yeroo Baay\'ee Gaafataman', faqTicketQuestion: 'Tikeetii toraa akkamittan argadha?',
+                faqTicketAnswer: 'Tikeetii Dijitaalaa filadhu, maqaa, lakkoofsa bilbilaa fi lakkoofsa herrega baankii galchi, tajaajila filadhu, achiis ergi. Lakkoofsa tikeetii kee qabachuun iddoo toraa kee hordofi.',
+                faqLoanQuestion: 'Qorannoon duraa liqii maal godha?',
+                faqLoanAnswer: 'Odeeffannoo galchite irratti hundaa\'uun tilmaama jalqabaa kenna. Kun raggaasisa liqii miti; dameen iyyannoo kamiyyuu ni sakatta\'a.',
+                faqContactQuestion: 'Yaada koo eenyutu dubbisuu danda\'a?',
+                faqContactAnswer: 'Ergaawwan quunnamtii dhuunfaatti kuufamu; bulchitootaa fi hooggantoota baankii hayyamaman qofa isaan arguu danda\'u.',
+                contactTitle: 'Nu Quunnamaa', contactBranchNote: 'Yaada ykn gaaffii tajaajilaa foormii kanaan hoogganaa dameetti ergi.',
+                contactNameLabel: 'Maqaa kee', contactDetailsLabel: 'Bilbila ykn imeelii (dirqama miti)', contactMessageLabel: 'Yaada',
+                contactSend: 'Yaada ergi', contactSending: 'Ergaa jira...', contactSuccess: 'Yaadni kee hoogganaa dameetti ergameera.', contactError: 'Yaada kee erguun hin danda\'amne. Maaloo irra deebi\'i.',
+                footerAbout: 'Waa\'ee', footerFaq: 'Gaaffilee', footerContact: 'Nu Quunnamaa',
+                inboxTitle: 'Yaada Maamiltootaa', inboxIntro: 'Ergaawwan dhuunfaa kutaa Nu Quunnamaa irraa ergaman.',
+                inboxName: 'Maqaa', inboxContact: 'Quunnamtii', inboxMessage: 'Yaada', inboxDate: 'Yeroo Ergame', inboxStatus: 'Haala', inboxAction: 'Gocha',
+                inboxUnread: 'Hin Dubbifamne', inboxRead: 'Dubbifame', inboxMarkRead: 'Dubbifame jedhii mallatteessi', inboxEmpty: 'Yaadni maamilaa ammaaf hin jiru.'
+            },
+            am: {
+                heroTitle: 'ቀላልና ደህንነቱ የተጠበቀ ባንክ አገልግሎት',
+                heroSub: 'ሂሳብዎን ይጠቀሙ፣ አገልግሎቶችዎን ያስተዳድሩ፤ ሁሉም በአንድ ቦታ።',
+                qTitle: 'የዲጂታል ሰልፍ ትኬት ይውሰዱ',
+                name: 'ሙሉ ስም',
+                phone: 'ስልክ ቁጥር',
+                accountNumber: 'የባንክ ሂሳብ ቁጥር',
+                service: 'የአገልግሎት ዓይነት',
+                btnQ: 'ትኬት ውሰድ',
+                loanTitle: 'የብድር ቅድመ-ምዘና',
+                collateral: 'የመያዣ/ዋስትና ዓይነት',
+                assetVal: 'የንብረት ግምት (ETB)',
+                btnL: 'ብድሩን አስላ',
+                statusTitle: 'የቅርንጫፉ ወቅታዊ ሁኔታ',
+                accessCustomer: 'የደንበኛ መግቢያ', accessCustomerLogout: 'የደንበኛ መውጫ',
+                accessAdmin: 'የአስተዳዳሪ መግቢያ', accessAdminPanel: 'የአስተዳዳሪ ዳሽቦርድ',
+                navHome: 'መነሻ', navServices: 'አገልግሎቶች', navAbout: 'ስለ ባንኩ', navContact: 'ያግኙን',
+                serviceTicket: 'ዲጂታል ቲኬት', serviceLoan: 'የብድር ቅድመ ምርመራ',
+                serviceBranch: 'የቅርንጫፍ ሁኔታ', serviceTrack: 'አገልግሎትን ይከታተሉ',
+                optionCash: 'ገንዘብ ማስገባት / ማውጣት', optionLoan: 'የአነስተኛ ብድር ጥያቄ', optionAccount: 'ሂሳብ መክፈት',
+                optionGroundnut: 'የኦቾሎኒ ምርት', optionLivestock: 'የእንስሳት ንግድ', optionIrrigation: 'የመስኖ መሣሪያ',
+                namePlaceholder: 'ምሳሌ፡ አህመድ አሊ', phonePlaceholder: '0911......',
+                labelEstLoan: 'የብድር መጠን ግምት:', labelBranch: 'ቅርንጫፍ:', labelNetwork: 'የኔትወርክ ሁኔታ:',
+                labelWait: 'አማካይ የመጠበቂያ ጊዜ:', labelMinutes: 'ደቂቃ', labelCounters: 'ንቁ የአገልግሎት መስኮት:',
+                trackTitle: 'አገልግሎትን ይከታተሉ', labelTicketNumber: 'የቲኬት ቁጥር',
+                btnCheckTicket: 'ቲኬት ይፈትሹ', labelLoanId: 'የብድር ማመልከቻ መለያ', btnCheckLoan: 'ብድር ይፈትሹ',
+                queueTitle: 'የቀጥታ ቲኬት መመልከቻ', btnRefreshQueue: 'አድስ',
+                queueColPosition: 'ተራ',
+                queueColTicket: 'ቲኬት', queueColService: 'አገልግሎት', queueColStatus: 'ሁኔታ',
+                queueLoading: 'ቲኬቶች በመጫን ላይ...', footerText: 'ኦሮሚያ ባንክ - የገጠር ቅርንጫፍ አገልግሎት © 2026 | ባቢሌ',
+                aboutTitle: 'ስለ ኦሮሚያ ባንክ', aboutCopy: 'ኦሮሚያ ባንክ አ.ማ. ግለሰቦችን፣ ንግዶችን፣ ገበሬዎችን እና ማህበረሰቦችን የሚያገለግል የኢትዮጵያ የፋይናንስ ተቋም ነው። ይህ ፖርታል የባቢሌ ዋና ቅርንጫፍ ደንበኞችን በዲጂታል ቲኬት፣ በአገልግሎት ክትትል እና በብድር ቅድመ ምርመራ ይረዳል።',
+                faqTitle: 'ተደጋጋሚ ጥያቄዎች', faqTicketQuestion: 'የሰልፍ ቲኬት እንዴት አገኛለሁ?',
+                faqTicketAnswer: 'ዲጂታል ቲኬትን ይምረጡ፣ ስም፣ ስልክ ቁጥር እና የባንክ ሂሳብ ቁጥር ያስገቡ፣ አገልግሎት ይምረጡና ያስገቡ። በሰልፉ ያለዎትን ቦታ ለመከታተል የቲኬት ቁጥሩን ይያዙ።',
+                faqLoanQuestion: 'የብድር ቅድመ ምርመራው ምን ያደርጋል?',
+                faqLoanAnswer: 'በገቡት መረጃ ላይ ተመስርቶ የመጀመሪያ ግምት ይሰጣል። ይህ የብድር ማጽደቅ አይደለም፤ ቅርንጫፉ ማመልከቻውን ይገመግማል።',
+                faqContactQuestion: 'የእውቂያ መልዕክቴን ማን ሊያነብ ይችላል?',
+                faqContactAnswer: 'መልዕክቶቹ በግል ይቀመጣሉ፤ ስልጣን ያላቸው የባንክ አስተዳዳሪዎችና ሥራ አስኪያጆች ብቻ ማየት ይችላሉ።',
+                contactTitle: 'ያግኙን', contactBranchNote: 'አስተያየት ወይም የአገልግሎት ጥያቄ በዚህ ቅጽ ለቅርንጫፉ ሥራ አስኪያጅ ይላኩ።',
+                contactNameLabel: 'ስምዎ', contactDetailsLabel: 'ስልክ ወይም ኢሜይል (አማራጭ)', contactMessageLabel: 'አስተያየት',
+                contactSend: 'አስተያየት ይላኩ', contactSending: 'በመላክ ላይ...', contactSuccess: 'አስተያየትዎ ለቅርንጫፉ ሥራ አስኪያጅ ተልኳል።', contactError: 'አስተያየትዎን መላክ አልተቻለም። እባክዎ ይድገሙ።',
+                footerAbout: 'ስለ ባንኩ', footerFaq: 'ጥያቄዎች', footerContact: 'ያግኙን',
+                inboxTitle: 'የደንበኞች አስተያየቶች', inboxIntro: 'ከያግኙን የተላኩ የግል መልዕክቶች።',
+                inboxName: 'ስም', inboxContact: 'እውቂያ', inboxMessage: 'አስተያየት', inboxDate: 'የተቀበለበት', inboxStatus: 'ሁኔታ', inboxAction: 'እርምጃ',
+                inboxUnread: 'ያልተነበበ', inboxRead: 'ተነቧል', inboxMarkRead: 'እንደተነበበ ምልክት ያድርጉ', inboxEmpty: 'እስካሁን የደንበኛ አስተያየት የለም።'
+            }
+        };
+
+        function setLang(lang) {
+            const languageKey = i18n[lang] ? lang : 'en';
+            document.querySelectorAll('#languageSwitcher button').forEach((button) => {
+                button.classList.toggle('active', button.dataset.lang === languageKey);
+            });
+
+            const t = i18n[languageKey];
+            document.documentElement.lang = languageKey;
+            try {
+                localStorage.setItem('oromia_portal_language', languageKey);
+            } catch (error) { }
+            document.getElementById('txt-hero-title').innerText = t.heroTitle;
+            document.getElementById('txt-hero-sub').innerText = t.heroSub;
+            document.getElementById('txt-q-title').innerText = t.qTitle;
+            document.getElementById('lbl-name').innerText = t.name;
+            document.getElementById('lbl-applicant').innerText = t.name;
+            document.getElementById('lbl-phone').innerText = t.phone;
+            document.getElementById('lbl-account-number').innerText = t.accountNumber;
+            document.getElementById('lbl-service').innerText = t.service;
+            document.getElementById('btn-q-submit').innerText = t.btnQ;
+            document.getElementById('txt-loan-title').innerText = t.loanTitle;
+            document.getElementById('lbl-loan-type').innerText = t.collateral;
+            document.getElementById('lbl-asset-val').innerText = t.assetVal;
+            document.getElementById('btn-l-submit').innerText = t.btnL;
+            document.getElementById('txt-status-title').innerText = t.statusTitle;
+            document.getElementById('service-ticket').innerText = t.serviceTicket;
+            document.getElementById('service-loan').innerText = t.serviceLoan;
+            document.getElementById('service-branch').innerText = t.serviceBranch;
+            document.getElementById('service-track').innerText = t.serviceTrack;
+            document.getElementById('service-nav-ticket').innerText = t.serviceTicket;
+            document.getElementById('service-nav-loan').innerText = t.serviceLoan;
+            document.getElementById('service-nav-branch').innerText = t.serviceBranch;
+            document.getElementById('service-nav-track').innerText = t.serviceTrack;
+            document.getElementById('option-cash').innerText = t.optionCash;
+            document.getElementById('option-loan').innerText = t.optionLoan;
+            document.getElementById('option-account').innerText = t.optionAccount;
+            document.getElementById('option-groundnut').innerText = t.optionGroundnut;
+            document.getElementById('option-livestock').innerText = t.optionLivestock;
+            document.getElementById('option-irrigation').innerText = t.optionIrrigation;
+            document.getElementById('q-name').placeholder = t.namePlaceholder;
+            document.getElementById('label-est-loan').innerText = t.labelEstLoan;
+            document.getElementById('label-branch').innerText = t.labelBranch;
+            document.getElementById('label-network').innerText = t.labelNetwork;
+            document.getElementById('label-wait').innerText = t.labelWait;
+            document.getElementById('label-minutes').innerText = t.labelMinutes;
+            document.getElementById('label-counters').innerText = t.labelCounters;
+            document.getElementById('track-title').innerText = t.trackTitle;
+            document.getElementById('label-ticket-number').innerText = t.labelTicketNumber;
+            document.getElementById('btn-check-ticket').innerText = t.btnCheckTicket;
+            document.getElementById('label-loan-id').innerText = t.labelLoanId;
+            document.getElementById('btn-check-loan').innerText = t.btnCheckLoan;
+            document.getElementById('liveQueueTitle').innerText = t.queueTitle;
+            document.getElementById('btn-refresh-queue').innerText = t.btnRefreshQueue;
+            document.getElementById('btn-refresh-queue').setAttribute('aria-label', t.btnRefreshQueue);
+            document.getElementById('queue-col-ticket').innerText = t.queueColTicket;
+            document.getElementById('queue-col-position').innerText = t.queueColPosition;
+            document.getElementById('queue-col-service').innerText = t.queueColService;
+            document.getElementById('queue-col-status').innerText = t.queueColStatus;
+            const loadingRow = document.querySelector('#liveQueueBody .live-empty');
+            if (loadingRow) loadingRow.innerText = t.queueLoading;
+            document.getElementById('footerCopyright').innerText = t.footerText;
+            document.getElementById('footerAboutLink').innerText = t.footerAbout;
+            document.getElementById('footerFaqLink').innerText = t.footerFaq;
+            document.getElementById('footerContactLink').innerText = t.footerContact;
+            document.getElementById('aboutTitle').innerText = t.aboutTitle;
+            document.getElementById('aboutCopy').innerText = t.aboutCopy;
+            document.getElementById('faqTitle').innerText = t.faqTitle;
+            document.getElementById('faqTicketQuestion').innerText = t.faqTicketQuestion;
+            document.getElementById('faqTicketAnswer').innerText = t.faqTicketAnswer;
+            document.getElementById('faqLoanQuestion').innerText = t.faqLoanQuestion;
+            document.getElementById('faqLoanAnswer').innerText = t.faqLoanAnswer;
+            document.getElementById('faqContactQuestion').innerText = t.faqContactQuestion;
+            document.getElementById('faqContactAnswer').innerText = t.faqContactAnswer;
+            document.getElementById('contactTitle').innerText = t.contactTitle;
+            document.getElementById('contactBranchNote').innerText = t.contactBranchNote;
+            document.getElementById('contactNameLabel').innerText = t.contactNameLabel;
+            document.getElementById('contactDetailsLabel').innerText = t.contactDetailsLabel;
+            document.getElementById('contactMessageLabel').innerText = t.contactMessageLabel;
+            document.getElementById('contactSubmit').innerText = t.contactSend;
+            document.getElementById('contactInboxTitle').innerText = t.inboxTitle;
+            document.getElementById('contactInboxIntro').innerText = t.inboxIntro;
+            document.getElementById('refreshContactMessages').innerText = t.btnRefreshQueue;
+            document.getElementById('inboxNameHeading').innerText = t.inboxName;
+            document.getElementById('inboxContactHeading').innerText = t.inboxContact;
+            document.getElementById('inboxMessageHeading').innerText = t.inboxMessage;
+            document.getElementById('inboxDateHeading').innerText = t.inboxDate;
+            document.getElementById('inboxStatusHeading').innerText = t.inboxStatus;
+            document.getElementById('inboxActionHeading').innerText = t.inboxAction;
+            document.getElementById('nav-home').innerText = t.navHome;
+            document.getElementById('nav-services').innerText = t.navServices;
+            document.getElementById('nav-about').innerText = t.navAbout;
+            document.getElementById('nav-contact').innerText = t.navContact;
+            updateAdminButton();
+            updateCustomerButton();
+            renderContactMessages();
+        }
+
+        function openAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.add('open');
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('authModal');
+            modal.classList.remove('open');
+            document.getElementById('authMessage').textContent = '';
+        }
+
+        function updateAdminButton() {
+            const adminToggleBtn = document.getElementById('adminToggleBtn');
+            const t = i18n[document.documentElement.lang] || i18n.en;
+            if (!authState.token) {
+                adminToggleBtn.textContent = t.accessAdmin;
+                return;
+            }
+            adminToggleBtn.textContent = authState.role ? `${authState.role.charAt(0).toUpperCase() + authState.role.slice(1)} ${t.accessAdminPanel}` : t.accessAdminPanel;
+        }
+
+        function setSession(token, username, role) {
+            authState.token = token;
+            authState.username = username;
+            authState.role = role || authState.role || 'admin';
+            localStorage.setItem('oromia_admin_token', token || '');
+            localStorage.setItem('oromia_admin_username', username || '');
+            localStorage.setItem('oromia_admin_role', authState.role || '');
+            updateAdminButton();
+            updateRoleUI();
+        }
+
+        function clearSession() {
+            authState.token = '';
+            authState.username = '';
+            authState.role = '';
+            localStorage.removeItem('oromia_admin_token');
+            localStorage.removeItem('oromia_admin_username');
+            localStorage.removeItem('oromia_admin_role');
+            document.body.classList.remove('admin-mode');
+            document.body.classList.add('public-page-mode');
+            document.getElementById('adminPanel').classList.add('hidden');
+            updateAdminButton();
+            updateRoleUI();
+        }
+
+        async function fetchJson(url, options = {}) {
+            const headers = { ...(options.headers || {}) };
+            if (!(options.body instanceof FormData)) {
+                headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+            }
+            if (authState.token) {
+                headers.Authorization = `Bearer ${authState.token}`;
+            }
+
+            const response = await fetch(url, { ...options, headers });
+            const contentType = response.headers.get('content-type') || '';
+            const data = contentType.includes('application/json') ? await response.json() : {};
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Request failed');
+            }
+
+            return data;
+        }
+
+        async function fetchCustomerJson(url, options = {}) {
+            const headers = { ...(options.headers || {}), 'Content-Type': 'application/json' };
+            if (customerState.token) headers.Authorization = `Customer ${customerState.token}`;
+            const response = await fetch(url, { ...options, headers });
+            const contentType = response.headers.get('content-type') || '';
+            const data = contentType.includes('application/json') ? await response.json() : {};
+            if (!response.ok) {
+                const error = new Error(data.message || 'Request failed');
+                error.status = response.status;
+                throw error;
+            }
+            return data;
+        }
+
+        function updateCustomerButton() {
+            const button = document.getElementById('customerToggleBtn');
+            const logoutButton = document.getElementById('customerLogoutBtn');
+            const t = i18n[document.documentElement.lang] || i18n.en;
+            button.textContent = customerState.token ? t.accessCustomerLogout : t.accessCustomer;
+            logoutButton.textContent = t.accessCustomerLogout;
+            logoutButton.hidden = !customerState.token;
+        }
+
+        function setCustomerSession(token, customer) {
+            customerState.token = token;
+            customerState.fullName = customer.fullName;
+            customerState.phone = customer.phone;
+            localStorage.setItem('oromia_customer_token', token);
+            localStorage.setItem('oromia_customer_name', customer.fullName);
+            localStorage.setItem('oromia_customer_phone', customer.phone);
+            updateCustomerButton();
+        }
+
+        function navigateToService(service) {
+            showPublicPage('services');
+            selectService(service);
+            const dropdown = document.getElementById('servicesNavDropdown');
+            if (dropdown) dropdown.classList.remove('open');
+            const servicesLink = document.getElementById('nav-services');
+            if (servicesLink) servicesLink.setAttribute('aria-expanded', 'false');
+            if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+            if (service === 'ticket') {
+                document.getElementById('panel-ticket').scrollIntoView({ block: 'start' });
+            }
+        }
+
+        function clearCustomerSession() {
+            customerState.token = '';
+            customerState.fullName = '';
+            customerState.phone = '';
+            localStorage.removeItem('oromia_customer_token');
+            localStorage.removeItem('oromia_customer_name');
+            localStorage.removeItem('oromia_customer_phone');
+            updateCustomerButton();
+        }
+
+        function openCustomerAuthModal() {
+            document.getElementById('customerAuthModal').classList.add('open');
+            document.getElementById('customerAuthMessage').textContent = '';
+        }
+
+        function openCustomerRegistration() {
+            openCustomerAuthModal();
+            resetCustomerAuthToLogin();
+            toggleCustomerAuthMode();
+        }
+
+        function closeCustomerAuthModal() {
+            document.getElementById('customerAuthModal').classList.remove('open');
+            document.getElementById('customerAuthMessage').textContent = '';
+        }
+
+        function resetCustomerAuthToLogin() {
+            document.getElementById('customerLoginForm').style.display = 'block';
+            document.getElementById('customerRegisterForm').style.display = 'none';
+            document.getElementById('customerOtpForm').style.display = 'none';
+            document.getElementById('customerAuthTitle').textContent = 'Customer Login';
+            document.getElementById('customerAuthSwitch').style.display = 'block';
+            document.getElementById('customerAuthSwitch').textContent = 'Create a customer account';
+            document.getElementById('customerAuthMessage').textContent = '';
+        }
+
+        function toggleCustomerAuthMode() {
+            const login = document.getElementById('customerLoginForm');
+            const register = document.getElementById('customerRegisterForm');
+            const otp = document.getElementById('customerOtpForm');
+            const registering = register.style.display === 'none';
+            login.style.display = registering ? 'none' : 'block';
+            register.style.display = registering ? 'block' : 'none';
+            otp.style.display = 'none';
+            document.getElementById('customerAuthSwitch').style.display = 'block';
+            document.getElementById('customerAuthTitle').textContent = registering ? 'Create Customer Account' : 'Customer Login';
+            document.getElementById('customerAuthSwitch').textContent = registering ? 'Already have an account? Login' : 'Create a customer account';
+            document.getElementById('customerAuthMessage').textContent = '';
+        }
+
+        function returnToCustomerRegistration() {
+            document.getElementById('customerOtpForm').style.display = 'none';
+            document.getElementById('customerRegisterForm').style.display = 'block';
+            document.getElementById('customerAuthTitle').textContent = 'Create Customer Account';
+            document.getElementById('customerAuthSwitch').style.display = 'none';
+            document.getElementById('customerAuthMessage').textContent = '';
+        }
+
+        async function handleCustomerLogin(event) {
+            event.preventDefault();
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/customer/login`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        phone: document.getElementById('customerLoginPhone').value.trim(),
+                        password: document.getElementById('customerLoginPassword').value
+                    })
+                });
+                setCustomerSession(data.token, data.customer);
+                closeCustomerAuthModal();
+                navigateToService('ticket');
+            } catch (error) {
+                document.getElementById('customerAuthMessage').textContent = error.message;
+            }
+        }
+
+        async function handleCustomerRegister(event) {
+            event.preventDefault();
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/customer/register`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        fullName: document.getElementById('customerFullName').value.trim(),
+                        phone: document.getElementById('customerRegisterPhone').value.trim(),
+                        password: document.getElementById('customerRegisterPassword').value
+                    })
+                });
+                customerRegistrationPhone = data.phone;
+                document.getElementById('customerRegisterForm').style.display = 'none';
+                document.getElementById('customerOtpForm').style.display = 'block';
+                document.getElementById('customerAuthTitle').textContent = 'Verify Your Phone';
+                document.getElementById('customerAuthSwitch').style.display = 'none';
+                document.getElementById('customerRegistrationOtp').value = '';
+                document.getElementById('customerAuthMessage').textContent = data.delivery === 'demo'
+                    ? 'Demo mode: the code was written to the server terminal.'
+                    : 'A verification code was sent to your phone.';
+            } catch (error) {
+                document.getElementById('customerAuthMessage').textContent = error.message;
+            }
+        }
+
+        async function handleCustomerRegistrationOtp(event) {
+            event.preventDefault();
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/customer/register/verify`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        phone: customerRegistrationPhone,
+                        code: document.getElementById('customerRegistrationOtp').value.trim()
+                    })
+                });
+                setCustomerSession(data.token, data.customer);
+                customerRegistrationPhone = '';
+                resetCustomerAuthToLogin();
+                closeCustomerAuthModal();
+                navigateToService('ticket');
+            } catch (error) {
+                document.getElementById('customerAuthMessage').textContent = error.message;
+            }
+        }
+
+        async function resendCustomerRegistrationOtp() {
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/customer/register/resend-otp`, {
+                    method: 'POST',
+                    body: JSON.stringify({ phone: customerRegistrationPhone })
+                });
+                document.getElementById('customerAuthMessage').textContent = data.delivery === 'demo'
+                    ? 'Demo mode: the new code was written to the server terminal.'
+                    : 'A new verification code was sent to your phone.';
+            } catch (error) {
+                document.getElementById('customerAuthMessage').textContent = error.message;
+            }
+        }
+
+        async function handleCustomerLogout() {
+            try {
+                if (customerState.token) await fetchCustomerJson(`${API_BASE}/api/customer/logout`, { method: 'POST' });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                clearCustomerSession();
+            }
+        }
+
+        async function checkExistingCustomerSession() {
+            if (!customerState.token) return;
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/customer/me`);
+                setCustomerSession(customerState.token, data.customer);
+            } catch (error) {
+                clearCustomerSession();
+                if (error.status === 401) {
+                    openCustomerAuthModal();
+                    document.getElementById('customerAuthMessage').textContent = 'Your customer session expired. Please log in again.';
+                }
+            }
+        }
+
+        function requireCustomerLogin() {
+            if (customerState.token) return true;
+            openCustomerAuthModal();
+            return false;
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+            const messageEl = document.getElementById('authMessage');
+
+            try {
+                const data = await fetchJson(`${API_BASE}/api/admin/login`, {
+                    method: 'POST',
+                    body: JSON.stringify({ username, password })
+                });
+
+                setSession(data.token, data.admin.username, data.admin.role);
+                closeAuthModal();
+                await loadAdminDashboard();
+                setAdminView(true);
+            } catch (error) {
+                messageEl.textContent = error.message;
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                if (authState.token) {
+                    await fetchJson(`${API_BASE}/api/admin/logout`, { method: 'POST' });
+                }
+            } catch (error) {
+                console.error(error);
+            } finally {
+                clearSession();
+                document.getElementById('adminPanel').classList.add('hidden');
+                closeAuthModal();
+            }
+        }
+
+        async function checkExistingSession() {
+            if (!authState.token) return;
+            try {
+                const data = await fetchJson(`${API_BASE}/api/admin/me`);
+                if (data.success && data.admin) {
+                    setSession(authState.token, data.admin.username, data.admin.role);
+                    await loadAdminDashboard();
+                    setAdminView(true);
+                }
+            } catch (error) {
+                clearSession();
+            }
+        }
+
+        function updateRoleUI() {
+            const isManager = authState.role === 'manager' || authState.role === 'admin';
+            const isCashier = authState.role === 'cashier' || isManager;
+
+            document.getElementById('exportTicketsBtn').style.display = isManager ? 'inline-block' : 'none';
+            document.getElementById('exportLoanBtn').style.display = isManager ? 'inline-block' : 'none';
+            document.querySelectorAll('.approval-btn').forEach((button) => {
+                button.style.display = isManager ? 'inline-block' : 'none';
+            });
+            document.getElementById('auditSection').style.display = isManager ? 'block' : 'none';
+            document.getElementById('contactMessagesSection').style.display = isManager ? 'block' : 'none';
+            if (!isManager) {
+                adminState.contactMessages = [];
+                document.getElementById('contactMessagesBody').replaceChildren();
+            }
+            document.getElementById('passwordSection').style.display = authState.token ? 'block' : 'none';
+            document.getElementById('branchOpsSection').style.display = isManager ? 'block' : 'none';
+            document.querySelectorAll('.admin-nav-button').forEach((button) => {
+                const managerOnly = ['auditSection', 'contactMessagesSection', 'branchOpsSection'].includes(button.dataset.adminTarget);
+                button.hidden = managerOnly && !isManager;
+            });
+
+            const activeButton = document.querySelector('.admin-nav-button.active');
+            if (!activeButton || activeButton.hidden) {
+                showAdminSection('queueSection');
+            }
+
+            if (!isCashier && authState.token) {
+                document.getElementById('adminPanel').classList.add('hidden');
+            }
+        }
+
+        function showAdminSection(sectionId) {
+            const targetButton = Array.from(document.querySelectorAll('.admin-nav-button'))
+                .find((button) => button.dataset.adminTarget === sectionId && !button.hidden);
+            if (!targetButton) return;
+
+            document.querySelectorAll('[data-admin-section]').forEach((section) => {
+                section.hidden = section.id !== sectionId;
+            });
+            document.querySelectorAll('.admin-nav-button').forEach((button) => {
+                const isActive = button === targetButton;
+                button.classList.toggle('active', isActive);
+                if (isActive) {
+                    button.setAttribute('aria-current', 'page');
+                } else {
+                    button.removeAttribute('aria-current');
+                }
+            });
+        }
+
+        function renderAdminDashboard() {
+            const queueBody = document.getElementById('adminQueueBody');
+            const loanBody = document.getElementById('adminLoanBody');
+
+            queueBody.innerHTML = (adminState.queue || []).map((item) => `
+                <tr>
+                    <td>${item.position || '—'}</td>
+                    <td>${item.name}</td>
+                    <td>${item.service}</td>
+                    <td><span class="pill ${item.status === 'Waiting' ? 'waiting' : 'served'}">${item.status}</span></td>
+                    <td>
+                        <button class="small-btn" onclick="updateQueueStatus(${item.id}, 'Served')">Serve</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            loanBody.innerHTML = (adminState.loans || []).map((item) => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${Number(item.amount || 0).toLocaleString()} ETB</td>
+                    <td><span class="pill ${item.status === 'Approved' ? 'approve' : 'review'}">${item.status}</span></td>
+                    <td>
+                        <button class="small-btn approval-btn" onclick="updateLoanStatus(${item.id}, 'Approved')">Approve</button>
+                    </td>
+                </tr>
+            `).join('');
+
+            document.getElementById('waitingCount').innerText = (adminState.queue || []).filter((item) => item.status === 'Waiting').length.toString().padStart(2, '0');
+            document.getElementById('loanCount').innerText = (adminState.loans || []).length.toString().padStart(2, '0');
+            updateRoleUI();
+        }
+
+        function renderContactMessages() {
+            const body = document.getElementById('contactMessagesBody');
+            if (!body) return;
+            const t = i18n[document.documentElement.lang] || i18n.en;
+            body.replaceChildren();
+            if (!adminState.contactMessages.length) {
+                const row = body.insertRow();
+                const cell = row.insertCell();
+                cell.colSpan = 6;
+                cell.textContent = t.inboxEmpty;
+                return;
+            }
+
+            adminState.contactMessages.forEach((message) => {
+                const row = body.insertRow();
+                row.insertCell().textContent = message.name;
+                row.insertCell().textContent = message.contact || '';
+                const messageCell = row.insertCell();
+                messageCell.className = 'message-cell';
+                messageCell.textContent = message.message;
+                row.insertCell().textContent = message.created_at;
+                row.insertCell().textContent = message.read_at ? t.inboxRead : t.inboxUnread;
+                const actionCell = row.insertCell();
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'small-btn';
+                button.textContent = message.read_at ? t.inboxRead : t.inboxMarkRead;
+                button.disabled = Boolean(message.read_at);
+                button.addEventListener('click', () => markContactMessageRead(message.id));
+                actionCell.appendChild(button);
+            });
+        }
+
+        async function loadContactMessages() {
+            if (!authState.token || !['admin', 'manager'].includes(authState.role)) return;
+            try {
+                const data = await fetchJson(`${API_BASE}/api/admin/contact-messages`);
+                adminState.contactMessages = data.messages || [];
+                renderContactMessages();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function markContactMessageRead(id) {
+            try {
+                await fetchJson(`${API_BASE}/api/admin/contact-messages/${id}/read`, { method: 'PATCH' });
+                await loadContactMessages();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function submitContactMessage(event) {
+            event.preventDefault();
+            if (contactMessageSending) return;
+            contactMessageSending = true;
+            const form = event.currentTarget;
+            const submitButton = document.getElementById('contactSubmit');
+            const status = document.getElementById('contactStatus');
+            const t = i18n[document.documentElement.lang] || i18n.en;
+            window.clearTimeout(contactStatusTimer);
+            contactStatusTimer = 0;
+            submitButton.disabled = true;
+            submitButton.textContent = t.contactSending;
+            status.textContent = '';
+            status.classList.remove('error');
+            try {
+                await fetchJson(`${API_BASE}/api/contact-messages`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: document.getElementById('contactName').value,
+                        contact: document.getElementById('contactDetails').value,
+                        message: document.getElementById('contactMessage').value
+                    })
+                });
+                form.reset();
+                status.textContent = t.contactSuccess;
+                contactStatusTimer = window.setTimeout(() => {
+                    status.textContent = '';
+                    contactStatusTimer = 0;
+                }, 4000);
+            } catch (error) {
+                status.textContent = t.contactError;
+                status.classList.add('error');
+            } finally {
+                contactMessageSending = false;
+                submitButton.disabled = false;
+                submitButton.textContent = t.contactSend;
+            }
+        }
+
+        function renderReports(data) {
+            const chart = document.getElementById('dailyTicketChart');
+            const dailyTickets = data.dailyTickets || [];
+            const maximum = Math.max(...dailyTickets.map((item) => Number(item.total)), 1);
+            chart.innerHTML = dailyTickets.length ? dailyTickets.map((item) => `
+                <div style="display:grid; grid-template-columns:90px 1fr 40px; gap:10px; align-items:center; margin:8px 0;">
+                    <span>${item.day}</span><div class="chart-bar" style="width:${Math.max(4, Number(item.total) / maximum * 100)}%"></div><strong>${item.total}</strong>
+                </div>
+            `).join('') : '<p>No ticket activity yet.</p>';
+
+            document.getElementById('auditBody').innerHTML = (data.audit || []).map((item) => `
+                <tr><td>${item.created_at}</td><td>${item.username}</td><td>${item.action}</td><td>${item.details || ''}</td></tr>
+            `).join('');
+
+            const analytics = data.analytics || {};
+            const totalTickets = Number(analytics.totalTickets || 0);
+            const waitingTickets = Number(analytics.waitingTickets || 0);
+            const approvedLoans = Number(analytics.approvedLoanCount || 0);
+            const avgWait = Number(analytics.avgWaitMinutes || 0);
+
+            document.getElementById('waitingCount').textContent = String(waitingTickets).padStart(2, '0');
+            document.getElementById('loanCount').textContent = String(Number(data.loanCount || 0)).padStart(2, '0');
+            document.getElementById('avgWaitDisplay').textContent = `${avgWait} min`;
+            document.getElementById('branchStatusDisplay').textContent = analytics.branchStatus || 'Online';
+            document.getElementById('analyticsTotalTickets').textContent = totalTickets.toLocaleString();
+            document.getElementById('analyticsWaitingTickets').textContent = waitingTickets.toLocaleString();
+            document.getElementById('analyticsApprovedLoans').textContent = approvedLoans.toLocaleString();
+
+            const serviceBreakdown = analytics.serviceBreakdown || [];
+            const serviceMax = Math.max(...serviceBreakdown.map((item) => Number(item.value || 0)), 1);
+            document.getElementById('serviceBreakdownChart').innerHTML = serviceBreakdown.length ? serviceBreakdown.map((item) => `
+                <div class="service-row">
+                    <span>${item.label}</span>
+                    <div class="service-bar-track"><div class="service-bar" style="width:${Math.max(10, (Number(item.value || 0) / serviceMax) * 100)}%"></div></div>
+                    <strong>${item.value}</strong>
+                </div>
+            `).join('') : '<p>No service data yet.</p>';
+
+            const trend = analytics.trend || [];
+            const trendMax = Math.max(...trend.map((item) => Number(item.total || 0)), 1);
+            document.getElementById('analyticsTrendChart').innerHTML = trend.length ? trend.map((item) => `
+                <div class="trend-row">
+                    <span>${item.day ? item.day.slice(5) : 'N/A'}</span>
+                    <div class="service-bar-track"><div class="service-bar alt" style="width:${Math.max(10, (Number(item.total || 0) / trendMax) * 100)}%"></div></div>
+                    <strong>${item.total}</strong>
+                </div>
+            `).join('') : '<p>No ticket history yet.</p>';
+
+            if (data.branch) {
+                document.getElementById('branchStatus').value = data.branch.status;
+                document.getElementById('branchWait').value = data.branch.avg_wait_minutes;
+                document.getElementById('branchCounters').value = data.branch.active_counters;
+            }
+        }
+
+        async function loadAdminDashboard() {
+            if (!authState.token) return;
+
+            try {
+                const search = encodeURIComponent(document.getElementById('adminSearch')?.value.trim() || '');
+                const status = encodeURIComponent(document.getElementById('adminStatus')?.value || '');
+                const data = await fetchJson(`${API_BASE}/api/admin/dashboard?search=${search}&status=${status}`);
+                authState.role = data.admin?.role || authState.role;
+                localStorage.setItem('oromia_admin_role', authState.role || '');
+                adminState.queue = data.queue || [];
+                adminState.loans = data.loans || [];
+                renderAdminDashboard();
+                renderReports(data);
+                await loadContactMessages();
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function updateQueueStatus(id, nextStatus) {
+            if (!authState.token) return;
+            try {
+                await fetchJson(`${API_BASE}/api/admin/tickets/${id}/status`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status: nextStatus })
+                });
+                await loadAdminDashboard();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function updateLoanStatus(id, nextStatus) {
+            if (!authState.token) return;
+            try {
+                await fetchJson(`${API_BASE}/api/admin/loans/${id}/status`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({ status: nextStatus })
+                });
+                await loadAdminDashboard();
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function exportAdminData(type) {
+            if (!authState.token) {
+                openAuthModal();
+                return;
+            }
+
+            if (!(authState.role === 'admin' || authState.role === 'manager')) {
+                alert('Only managers can export data.');
+                return;
+            }
+
+            const endpoint = type === 'tickets'
+                ? `${API_BASE}/api/admin/export/tickets`
+                : `${API_BASE}/api/admin/export/loan-approvals`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    headers: { Authorization: `Bearer ${authState.token}` }
+                });
+
+                if (!response.ok) {
+                    throw new Error((await response.json()).message || 'Export failed');
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = type === 'tickets' ? 'oromia-ticket-export.csv' : 'oromia-loan-approvals.csv';
+                document.body.appendChild(link);
+                link.click();
+                link.remove();
+                URL.revokeObjectURL(url);
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function lookupTicket() {
+            if (!requireCustomerLogin()) return;
+            const ticket = document.getElementById('ticketLookup').value.trim();
+            if (!ticket) return;
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/tickets/lookup?ticket=${encodeURIComponent(ticket)}`);
+                activeTicketNumber = data.ticket.ticket_number;
+                document.getElementById('lookupResult').textContent = ticketStatusSummary(data.ticket);
+                showTicketPosition(data.ticket);
+            } catch (error) {
+                document.getElementById('lookupResult').textContent = error.message;
+            }
+        }
+
+        function ticketStatusSummary(ticket) {
+            if (ticket.status !== 'WAITING') return `Ticket ${ticket.ticket_number}: ${ticket.status} - ${ticket.service_type}`;
+            const ahead = Number(ticket.customers_ahead || 0);
+            const countText = `${ahead} ${ahead === 1 ? 'customer' : 'customers'} ahead`;
+            return `Ticket ${ticket.ticket_number}: ${ticket.status} - ${ticket.service_type} - ${countText}`;
+        }
+
+        function showTicketPosition(ticket) {
+            const position = document.getElementById('res-queue-position');
+            if (!position || ticket.ticket_number !== activeTicketNumber) return;
+            if (ticket.status !== 'WAITING') {
+                position.textContent = `Ticket status: ${ticket.status}`;
+                return;
+            }
+            const ahead = Number(ticket.customers_ahead || 0);
+            position.textContent = `${ahead} ${ahead === 1 ? 'customer' : 'customers'} ahead of you`;
+        }
+
+        async function refreshTicketPosition() {
+            if (!customerState.token || !activeTicketNumber) return;
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/tickets/lookup?ticket=${encodeURIComponent(activeTicketNumber)}`);
+                showTicketPosition(data.ticket);
+            } catch (error) {
+                if (error.status === 404) {
+                    activeTicketNumber = '';
+                    document.getElementById('res-queue-position').textContent = 'This ticket is no longer active.';
+                    return;
+                }
+                console.error(error);
+            }
+        }
+
+        async function lookupLoan() {
+            if (!requireCustomerLogin()) return;
+            const id = document.getElementById('loanLookup').value.trim();
+            if (!id) return;
+            try {
+                const data = await fetchCustomerJson(`${API_BASE}/api/loans/lookup?id=${encodeURIComponent(id)}`);
+                document.getElementById('lookupResult').textContent = `Loan ${data.loan.id}: ${data.loan.status} - estimated ${Number(data.loan.estimated_loan).toLocaleString()} ETB`;
+            } catch (error) {
+                document.getElementById('lookupResult').textContent = error.message;
+            }
+        }
+
+        async function saveBranchSettings() {
+            try {
+                await fetchJson(`${API_BASE}/api/admin/branch`, {
+                    method: 'PATCH',
+                    body: JSON.stringify({
+                        status: document.getElementById('branchStatus').value,
+                        avgWaitMinutes: Number(document.getElementById('branchWait').value),
+                        activeCounters: document.getElementById('branchCounters').value
+                    })
+                });
+                alert('Branch settings saved.');
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function changeAdminPassword() {
+            try {
+                await fetchJson(`${API_BASE}/api/admin/password`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        currentPassword: document.getElementById('currentPassword').value,
+                        newPassword: document.getElementById('newPassword').value
+                    })
+                });
+                document.getElementById('currentPassword').value = '';
+                document.getElementById('newPassword').value = '';
+                alert('Password changed successfully.');
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        function printDashboard() {
+            const panel = document.getElementById('adminPanel');
+            panel.classList.remove('hidden');
+            window.print();
+        }
+
+        async function loadPublicBranchStatus() {
+            try {
+                const data = await fetchJson(`${API_BASE}/api/branch/status`);
+                const branch = data.branch;
+                document.getElementById('publicBranchStatus').textContent = branch.status;
+                document.getElementById('publicWaitTime').textContent = branch.avg_wait_minutes;
+                document.getElementById('publicCounters').textContent = branch.active_counters;
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        async function loadLiveQueue() {
+            const connection = document.getElementById('liveQueueConnection');
+            const indicator = document.getElementById('liveQueueIndicator');
+            const queueBody = document.getElementById('liveQueueBody');
+
+            try {
+                const data = await fetchJson(`${API_BASE}/api/tickets/live`);
+                const tickets = data.tickets || [];
+                queueBody.replaceChildren();
+
+                if (!tickets.length) {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 4;
+                    cell.className = 'live-empty';
+                    cell.textContent = 'No customers are currently waiting.';
+                    row.appendChild(cell);
+                    queueBody.appendChild(row);
+                } else {
+                    tickets.forEach((ticket) => {
+                        const row = document.createElement('tr');
+                        const positionCell = document.createElement('td');
+                        const numberCell = document.createElement('td');
+                        const serviceCell = document.createElement('td');
+                        const statusCell = document.createElement('td');
+                        const badge = document.createElement('span');
+                        positionCell.textContent = ticket.position;
+                        numberCell.textContent = ticket.ticket_number;
+                        serviceCell.textContent = ticket.service_type;
+                        badge.className = `pill ${ticket.status === 'SERVED' ? 'served' : 'waiting'}`;
+                        badge.textContent = ticket.status === 'SERVED' ? 'Served' : 'Waiting';
+                        statusCell.appendChild(badge);
+                        row.append(positionCell, numberCell, serviceCell, statusCell);
+                        queueBody.appendChild(row);
+                    });
+                }
+
+                connection.textContent = 'Live';
+                indicator.classList.remove('offline');
+                document.getElementById('liveQueueUpdated').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+                refreshTicketPosition();
+            } catch (error) {
+                connection.textContent = 'Connection lost';
+                indicator.classList.add('offline');
+                if (!queueBody.children.length) {
+                    const row = document.createElement('tr');
+                    const cell = document.createElement('td');
+                    cell.colSpan = 4;
+                    cell.className = 'live-empty';
+                    cell.textContent = 'Unable to load tickets. Retrying automatically.';
+                    row.appendChild(cell);
+                    queueBody.appendChild(row);
+                }
+                console.error(error);
+            }
+        }
+
+        function toggleAdminDashboard(forceOpen) {
+            const panel = document.getElementById('adminPanel');
+            if (!authState.token) {
+                openAuthModal();
+                return;
+            }
+
+            const shouldOpen = typeof forceOpen === 'boolean'
+                ? forceOpen
+                : panel.classList.contains('hidden');
+            setAdminView(shouldOpen);
+
+            if (shouldOpen) {
+                loadAdminDashboard();
+            }
+        }
+
+        function setAdminView(isOpen) {
+            document.getElementById('adminPanel').classList.toggle('hidden', !isOpen);
+            document.body.classList.toggle('admin-mode', isOpen);
+            document.body.classList.toggle('public-page-mode', !isOpen);
+            document.body.classList.remove('home-page-mode');
+            if (isOpen) {
+                window.scrollTo(0, 0);
+            } else {
+                showPublicPage(activePublicPage, false);
+            }
+        }
+
+        function updateHomeSidebarActive(pageId) {
+            const isFaq = window.location.hash === '#faq';
+            document.querySelectorAll('.home-side-link[data-home-target]').forEach((link) => {
+                const isFaqLink = link.getAttribute('href') === '#faq';
+                link.classList.toggle('active', isFaq
+                    ? isFaqLink
+                    : !isFaqLink && link.dataset.homeTarget === pageId);
+            });
+        }
+
+        function showPublicPage(pageId, updateHash = true) {
+            const targetPage = Array.from(document.querySelectorAll('[data-public-page]'))
+                .find((page) => page.dataset.publicPage === pageId);
+            if (!targetPage) return;
+
+            activePublicPage = pageId;
+            document.body.classList.add('public-page-mode');
+            document.body.classList.remove('admin-mode');
+            document.body.classList.toggle('home-page-mode', pageId === 'home');
+            document.querySelectorAll('[data-public-page]').forEach((page) => {
+                page.classList.toggle('public-page-active', page === targetPage);
+            });
+            document.querySelectorAll('.top-nav a[data-public-target]').forEach((link) => {
+                const isActive = link.dataset.publicTarget === pageId;
+                if (isActive) {
+                    link.setAttribute('aria-current', 'page');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
+
+            if (updateHash && window.location.hash !== `#${pageId}`) {
+                window.history.pushState(null, '', `#${pageId}`);
+            }
+            updateHomeSidebarActive(pageId);
+            window.scrollTo(0, 0);
+        }
+
+        async function issueTicket() {
+            if (!requireCustomerLogin()) return;
+            const name = document.getElementById('q-name').value.trim();
+            const phone = document.getElementById('q-phone').value.trim();
+            const accountNumber = document.getElementById('q-account-number').value.trim();
+            const service = document.getElementById('q-service').value;
+
+            if (!name || !phone || !accountNumber) {
+                alert('Please enter your name, phone number, and bank account number');
+                return;
+            }
+
+            try {
+                const response = await fetchCustomerJson(`${API_BASE}/api/tickets/issue`, {
+                    method: 'POST',
+                    body: JSON.stringify({ name, phone, accountNumber, serviceType: service })
+                });
+
+                document.getElementById('res-num').innerText = response.ticket.ticket_number;
+                document.getElementById('ticket-res').style.display = 'block';
+                activeTicketNumber = response.ticket.ticket_number;
+                await refreshTicketPosition();
+                const queueNotice = document.getElementById('res-queue-notice');
+                queueNotice.textContent = response.ticket.queue_alert_eligible
+                    ? response.ticket.sms_configured
+                        ? 'We will text you when you are third in the queue.'
+                        : 'The queue is busy, but SMS alerts are not configured yet.'
+                    : '';
+
+                if (authState.token) {
+                    await loadAdminDashboard();
+                }
+            } catch (error) {
+                if (error.status === 401) {
+                    clearCustomerSession();
+                    openCustomerAuthModal();
+                    document.getElementById('customerAuthMessage').textContent = 'Your customer session expired. Please log in again to request a ticket.';
+                    return;
+                }
+                alert(error.message);
+            }
+        }
+
+        async function calcLoan() {
+            if (!requireCustomerLogin()) return;
+            const name = document.getElementById('l-name').value.trim();
+            const phone = document.getElementById('q-phone').value.trim();
+            const loanType = document.getElementById('l-type').value;
+            const assetValue = parseFloat(document.getElementById('l-val').value);
+
+            if (!name || !phone || !assetValue) {
+                alert('Please enter applicant name, phone number, and asset value');
+                return;
+            }
+
+            try {
+                const response = await fetchCustomerJson(`${API_BASE}/api/loans/prescreen`, {
+                    method: 'POST',
+                    body: JSON.stringify({ name, phone, loanType, assetValue })
+                });
+
+                const est = Number(response.result.estimated_loan || 0);
+                document.getElementById('res-loan-amount').innerText = est.toLocaleString() + ' ETB';
+                document.getElementById('loan-res').style.display = 'block';
+
+                if (authState.token) {
+                    await loadAdminDashboard();
+                }
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        document.getElementById('adminToggleBtn').addEventListener('click', () => {
+            if (!authState.token) {
+                openAuthModal();
+            } else {
+                toggleAdminDashboard();
+            }
+        });
+
+        document.getElementById('customerToggleBtn').addEventListener('click', () => {
+            if (customerState.token) {
+                handleCustomerLogout();
+            } else {
+                openCustomerAuthModal();
+            }
+        });
+        document.getElementById('customerLogoutBtn').addEventListener('click', handleCustomerLogout);
+
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('customerLoginForm').addEventListener('submit', handleCustomerLogin);
+        document.getElementById('customerRegisterForm').addEventListener('submit', handleCustomerRegister);
+        document.getElementById('customerOtpForm').addEventListener('submit', handleCustomerRegistrationOtp);
+        document.getElementById('contactForm').addEventListener('submit', submitContactMessage);
+        document.getElementById('refreshContactMessages').addEventListener('click', loadContactMessages);
+        document.querySelectorAll('.admin-nav-button').forEach((button) => {
+            button.addEventListener('click', () => showAdminSection(button.dataset.adminTarget));
+        });
+        document.querySelectorAll('.top-nav a[data-public-target]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                showPublicPage(link.dataset.publicTarget);
+            });
+        });
+        document.querySelectorAll('.home-side-link[data-home-target]').forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                if (link.dataset.homeTarget === 'services') {
+                    navigateToService('ticket');
+                    return;
+                }
+                showPublicPage(link.dataset.homeTarget);
+                if (link.getAttribute('href') === '#faq') {
+                    window.history.pushState(null, '', '#faq');
+                    updateHomeSidebarActive('about');
+                    document.getElementById('faq').scrollIntoView();
+                }
+            });
+        });
+        document.querySelectorAll('[data-nav-service]').forEach((button) => {
+            button.addEventListener('click', () => navigateToService(button.dataset.navService));
+        });
+        document.addEventListener('click', (event) => {
+            const dropdown = document.getElementById('servicesNavDropdown');
+            if (dropdown && !dropdown.contains(event.target)) {
+                dropdown.classList.remove('open');
+                const servicesLink = document.getElementById('nav-services');
+                if (servicesLink) servicesLink.setAttribute('aria-expanded', 'false');
+            }
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                const dropdown = document.getElementById('servicesNavDropdown');
+                if (dropdown) dropdown.classList.remove('open');
+                const servicesLink = document.getElementById('nav-services');
+                if (servicesLink) servicesLink.setAttribute('aria-expanded', 'false');
+            }
+        });
+        window.addEventListener('popstate', () => {
+            const requestedHash = window.location.hash.slice(1);
+            const requestedPage = requestedHash === 'faq' ? 'about' : requestedHash;
+            const pageExists = Array.from(document.querySelectorAll('[data-public-page]'))
+                .some((page) => page.dataset.publicPage === requestedPage);
+            showPublicPage(pageExists ? requestedPage : 'home', false);
+            if (requestedHash === 'faq') {
+                document.getElementById('faq').scrollIntoView();
+            }
+        });
+
+        document.querySelectorAll('#languageSwitcher button').forEach((button) => {
+            button.addEventListener('click', () => setLang(button.dataset.lang));
+        });
+        function selectService(service) {
+            document.querySelectorAll('.service-choice').forEach((button) => {
+                button.classList.toggle('active', button.dataset.service === service);
+            });
+            document.querySelectorAll('.service-panel').forEach((panel) => {
+                panel.classList.toggle('active', panel.id === `panel-${service}`);
+            });
+        }
+
+        document.querySelectorAll('.service-choice').forEach((button) => {
+            button.addEventListener('click', () => selectService(button.dataset.service));
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAdminButton();
+            updateCustomerButton();
+            try {
+                setLang(localStorage.getItem('oromia_portal_language') || 'en');
+            } catch (error) {
+                setLang('en');
+            }
+            updateRoleUI();
+            loadPublicBranchStatus();
+            loadLiveQueue();
+            window.setInterval(loadLiveQueue, 5000);
+            checkExistingSession();
+            checkExistingCustomerSession();
+            renderAdminDashboard();
+            selectService('ticket');
+            const requestedPage = window.location.hash.slice(1);
+            const initialPage = requestedPage === 'faq' ? 'about' : requestedPage;
+            const pageExists = Array.from(document.querySelectorAll('[data-public-page]'))
+                .some((page) => page.dataset.publicPage === initialPage);
+            showPublicPage(pageExists ? initialPage : 'home', false);
+            if (requestedPage === 'faq') {
+                document.getElementById('faq').scrollIntoView();
+            }
+        });
+    </script>
+</body>
+
+</html>

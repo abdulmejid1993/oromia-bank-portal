@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: oromia-bank-portal-demo
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/branch/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DEMO_OTP_MODE
+        value: "false"
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: MANAGER_USERNAME
+        value: manager
+      - key: MANAGER_PASSWORD
+        sync: false
+      - key: CASHIER_USERNAME
+        value: cashier
+      - key: CASHIER_PASSWORD
+        sync: false
+      - key: OTP_SECRET
+        generateValue: true

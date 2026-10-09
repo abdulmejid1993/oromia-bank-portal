@@ -1,0 +1,16 @@
+{
+    "name": "oromia-bank-portal",
+    "version": "1.0.0",
+    "description": "Oromia Bank portal with admin login and SQLite-backed storage",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "node server.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.7",
+        "express": "^4.19.2",
+        "sqlite3": "^5.1.7"
+    }
+}
